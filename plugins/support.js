@@ -37,9 +37,9 @@ System({
     const formatPluginData = (pluginData) => {
         return Object.entries(pluginData).map(([key, value]) => `*${key}:* ${value.url}`).join('\n\n');
     };
-    await message.send('External plugins need to edit \n\n' + formatPluginData(externalPluginsData), {});
+    await message.send('*External plugins need to edit* \n\n' + formatPluginData(externalPluginsData), {});
     await sleep(500);
-    await message.send('All plugins no need to edit \n\n' + formatPluginData(allPluginsData), {});
+    await message.send('*All plugins no need to edit* \n\n' + formatPluginData(allPluginsData), {});
 });
 
 
