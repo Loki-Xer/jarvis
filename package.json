@@ -5,7 +5,6 @@
     "main": "index.js",
     "type": "commonjs",
     "scripts": {
-        "postinstall": "npx esbuild node_modules/@whiskeysockets/baileys/lib/index.js --bundle --platform=node --format=cjs --external:jimp --external:sharp --outfile=node_modules/baileys.js",
         "start": "pm2 start . --attach --name jarvis",
         "stop": "pm2 stop jarvis",
         "dev": "node index.js",
@@ -20,7 +19,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Loki-Xer/jarvis"
+        "url": ""
     },
     "keywords": [
         "whatsapp",
