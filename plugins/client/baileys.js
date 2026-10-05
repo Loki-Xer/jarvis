@@ -1,4 +1,4 @@
-const { jidDecode } = require("baileys");
+const { jidDecode } = require("../../lib/bailys");
 
 const decodeJid = (jid) => {
   if (!jid) return jid;
