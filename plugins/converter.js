@@ -204,7 +204,19 @@ System({
   if(message.quoted && message.reply_message.text && match) match = message.reply_message.text + ";" + match;
   if(message.quoted && message.reply_message.text && !match) match = message.reply_message.text;
   if (!match) return await message.reply("_provide text to translate *eg: i am fine;ml*_");
-  const text = match.split(";");  
-  const result = await translate(text[0], text[1] || config.LANGUAGE);
-  return await message.reply(result);
+  const idx = match.lastIndexOf(";");
+  const text = idx == -1 ? [match] : [match.slice(0, idx), match.slice(idx + 1)];
+  const language = (text[1] || config.LANGUAGE).trim();
+  if (language.toLowerCase().includes("manglish")) {
+      if(isManglish(text[0])) {
+          return await message.reply("_Can't convert, it's already manglish_");
+      } else if (isMalayalam(text[0])) {
+          return await message.reply(malayalamToManglish(text[0]));
+      } else {
+          const result = await translate(text[0], "ml");
+          return await message.reply(malayalamToManglish(result) || "_failed to convert_");
+      };
+  };
+  const result = await translate(text[0], language);
+  return await message.reply(result || "_failed to translate_");
 });
