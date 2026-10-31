@@ -9,22 +9,20 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System, isPrivate, copilot, gemini, chatgpt } = require("../lib/");
+const { System, isPrivate, chatgpt, gemini, chatgpt } = require("../lib/");
 const { elevenlabs } = require("./client/");
 
 System({
-    pattern: "copilot", 
+    pattern: "chatgpt", 
     fromMe: isPrivate,
-    desc: "ai copilot", 
+    desc: "ai chatgpt", 
     type: "ai",
 }, async (m, match) => {
    match = match || m.reply_message?.text;
    if(match && m.quoted) match += "\n" + m.reply_message.text;
-   if(!match) return m.reply("_*need query !!*_\n_*eg: .copilot create a simple html page*_");
-   let session = m.quoted && m.store.copilot.has(m.reply_message.id) ? m.store.copilot.get(m.reply_message.id) : copilot.generateNewSession();
-   const res = await copilot.chat(session, match);
-   const msg = await m.send(res.text, { contextInfo: { forwardingScore: 1, isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363197401188542@newsletter", newsletterName: "copilot" }}});
-   m.store.copilot.set(msg.key.id, session);
+   if(!match) return m.reply("_*need query !!*_\n_*eg: .chatgpt create a simple html page*_");
+   const res = await chatgpt(match);
+   const msg = await m.send(res.response, { contextInfo: { forwardingScore: 1, isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363197401188542@newsletter", newsletterName: "chatgpt" }}});
 });
 
 System({
