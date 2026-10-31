@@ -9,7 +9,8 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System, isPrivate, getMalayalamDate } = require("../lib/");
+const { System, isPrivate, getMalayalamDate, config } = require("../lib/");
+
 const WEEKDAYS = [['ഞായർ', 'Sunday'], ['തിങ്കൾ', 'Monday'], ['ചൊവ്വ', 'Tuesday'], ['ബുധൻ', 'Wednesday'], ['വ്യാഴം', 'Thursday'], ['വെള്ളി', 'Friday'], ['ശനി', 'Saturday']];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const GREETINGS = [[12, 'സുപ്രഭാതം', 'Good Morning'], [17, 'ശുഭ ഉച്ച', 'Good Afternoon'], [20, 'ശുഭ സായാഹ്നം', 'Good Evening'], [24, 'ശുഭ രാത്രി', 'Good Night']];
@@ -21,8 +22,8 @@ System({
     type: "tools"
 }, async (msg, match) => {
   const USE_MALAYALAM = match.includes('ml');
-  const panchang = getMalayalamDate();
-  const today = new Date();
+  const today = new Date(new Date().toLocaleString("en-US", { timeZone: config.TIMEZONE }));
+  const panchang = getMalayalamDate(today);
   const [dayMl, dayEn] = WEEKDAYS[today.getDay()];
   const [, greetMl, greetEn] = GREETINGS.find(([limit]) => today.getHours() < limit);
   const dateEn = `${MONTHS[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
