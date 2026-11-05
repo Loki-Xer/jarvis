@@ -19,7 +19,8 @@ const {
     youtube,
     isPrivate,
 } = require('../lib/');
-const { isUrl, getBuffer, AddMp3Meta, extractUrlsFromText } = require('./client/');
+const { isUrl, getBuffer, AddMp3Meta, extractUrlsFromText, formatDuration, formatViews, cleanTitle } = require('./client/');
+
 
 
 System({
@@ -120,8 +121,8 @@ System({
         const yt = await YtInfo(matchUrl);
         await message.reply(`*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_`, { contextInfo: { externalAdReply: { title: yt.author, body: yt.seconds, thumbnail: await getBuffer(yt.thumbnail), mediaType: 1, mediaUrl: yt.url, sourceUrl: yt.url, showAdAttribution: false, renderLargerThumbnail: true }}});
       } else {
-        const videos = await yts(match);
-        const result = videos.map(video => `*🏷️ Title :* _*${video.title}*_\n*📁 Duration :* _${video.duration}_\n*🔗 Link :* _${video.url}_`);
-        return await message.reply(`\n\n_*Result Of ${match} 🔍*_\n\n`+result.join('\n\n')+"\n\n*🤍 صنع بواسطة لوكي*")
+        const result = (await yts(match)).slice(0, 12);
+        const options = result.map((u) => ({ displayText: `*${cleanTitle(u.title)}*\n*Author:* ${u.author || "Unknown"}\n*Duration:* ${formatDuration(u.duration)}\n*Views:* ${formatViews(u.views)}\n*Published:* ${u.publishedTime || "Unknown"}`, id: `play ${u.url}`, image: u.image }));
+        return await message.send(`*YouTube Search*\n\n*Query:* ${match}`, { values: options, withPrefix: true, participates: [message.sender] }, "poll");
       }
   });
