@@ -1,0 +1,5 @@
+node_modules/
+sessions/
+database.db
+*.db
+config.env

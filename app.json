@@ -1,0 +1,132 @@
+{
+    "name": "jarvis",
+    "version":"2.5.0",
+    "description": "Jarvis Multi Device whatsapp bot",
+    "logo": "https://graph.org/file/58ea74675af7836579a3a.jpg",
+    "keywords": ["nodejs"],
+    "repository": "https://github.com/Loki-Xer/Jarvis",
+    "website": "https://github.com/Loki-Xer/Jarvis",
+    "success_url": "/",
+    "stack": "container",
+    "env": {
+        "BOT_INFO": {
+            "description": "botname;ownername;image url",
+            "required": true,
+            "value":"ᴊᴀʀᴠɪꜱ;ʟᴏᴋɪ-xᴇʀ;https://graph.org/file/1506e5842805b0968c5cf.mp4"
+        },
+        "MENU_FONT": {
+            "description": "type;plugin name, have to be less than 35",
+            "required": false,
+            "value":"12;9"
+        },
+        "AUDIO_DATA": {
+            "description": "audio package name",
+            "required": true,
+            "value":"ʟᴏᴋɪ-xᴇʀ;ᴊᴀʀᴠɪꜱ;https://graph.org/file/58ea74675af7836579a3a.jpg"
+        },
+        "WARN_COUNT": {
+            "description": "warn count",
+            "required": true,
+            "value":"3"
+        },
+        "MEDIA_DATA": {
+            "description": "media data that uses in list",
+            "required": true,
+            "value":"ʟɪꜱᴛ ᴍᴇɴᴜ;ᴊᴀʀᴠɪꜱ-ᴍᴅ;https://graph.org/file/58ea74675af7836579a3a.jpg"
+        },
+        "HANDLER": {
+            "description": "handler for bot. all so can be null or false",
+            "required": true,
+            "value":"null"
+        },
+        "SESSION_ID": {
+            "description": "session id",
+            "required": true
+        },
+        "WORK_TYPE": {
+            "description": "worker type public or private",
+            "required": true,
+            "value":"private"
+        },
+        "HEROKU_APP_NAME": {
+            "description": "heroku app name, same as above entered",
+            "required": true
+        },
+        "HEROKU_API_KEY": {
+            "description": "Heroku account api key, https://dashboard.heroku.com/account",
+            "required": true
+        },
+        "STICKER_PACKNAME": {
+            "description": "sticker package name",
+            "required": true,
+            "value":"ʟᴏᴋɪ;ᴊᴀʀᴠɪꜱ"
+        },
+        "SUDO": {
+            "description": "owner number of the bot",
+            "required": false,
+            "value":"4915252819677"
+        },
+        "ALLWAYS_ONLINE": {
+            "description": "show bot number last seen as online",
+            "required": false,
+            "value":"false"
+        },
+        "READ_MSG": {
+            "description": "Read all messages",
+            "required": false,
+            "value":"false"
+        },
+        "SAVE_STATUS": {
+            "description": "save all status message",
+            "required": false,
+            "value":"null"
+        },
+        "STATUS_VIEW": {
+            "description": "status views use true for view all status or use only-view=jid to only view given jid status or use not-view=jid to not view the one person status and view anothers",
+            "required": false,
+            "value":"false"
+        },
+        "REJECT_CALL": {
+            "description": "automatic reject call",
+            "required": true,
+            "value":"false"
+        },
+        "ERROR_MSG": {
+            "description": "send error messages to bot number",
+            "required": true,
+            "value":"false"
+        },
+        "BAN_CHATS": {
+            "description": "ban chat from useing bot value: jid1,jid2",
+            "required": false,
+            "value":""
+        },
+        "STATUS_REPLY": {
+            "description": "Reply to status",
+            "required": false,
+            "value":"false"
+        },
+        "STATUS_REPLY_MSG": {
+            "description": "Status reply message to send",
+            "required": false,
+            "value":"*Nice Status Brother 🦫✨*"
+        },
+        "CMD_REACTION": {
+            "description": "react to commands",
+            "required": false,
+            "value":"false"
+        }
+    },
+      "addons": [{ "plan": "heroku-postgresql" }],
+      "buildpacks": [
+                    { "url": "https://github.com/heroku/heroku-buildpack-nodejs#latest" },
+                    { "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git" }
+    ],
+    "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "basic"
+    }
+    }
+  }
+  

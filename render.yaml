@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: jarvis
+    repo: https://github.com/Loki-Xer/jarvis.git
+    branch: main
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: RENDER_APP_NAME
+        sync: false
+        required: true
+      - key: RENDER_API
+        sync: false
+        required: true
+      - key: SESSION_ID
+        sync: false
+        required: true
+      - key: DATABASE_URL
+        sync: false
+        required: true
+        
