@@ -15,24 +15,7 @@ const { BOT_INFO, MEDIA_DATA, MENU_FONT } = require("../config");
 const { uptime } = require("os");
 const { version } = require('../package.json');
 const fancy = require('./client/fancy');
-const { isUrl } = require('./client/');
-
-async function readMore() {
-  const readmore = String.fromCharCode(8206).repeat(4001);
-  return readmore;
-};
-
-const clockString = (duration) => {
-    let seconds = Math.floor((duration / 1000) % 60),
-        minutes = Math.floor((duration / (1000 * 60)) % 60),
-        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-    
-    hours = hours < 10 ? "0" + hours : hours;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    
-    return hours + ":" + minutes + ":" + seconds;
-};
+const { isUrl, readMore, clockString } = require('./client/');
 
 System({
     pattern: 'menu',
@@ -89,8 +72,11 @@ System({
     let url = BOT_INFO.split(';')[2];
     let options = BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
     url = url.replace(/&gif/g, '');
-    if (isUrl(url)) await message.sendFromUrl(url, options);
-    else await message.send(menu);
+    if (isUrl(url)) {
+        return await message.sendFromUrl(url, options);
+    } else {
+        return await message.send(menu);
+    };
 });
 
 System({
@@ -111,7 +97,7 @@ System({
     });
     if (MEDIA_DATA) {
         const [title, body, thumbnail] = MEDIA_DATA.split(";");
-        await message.send(menu, { contextInfo: { externalAdReply: { title, body, thumbnailUrl: thumbnail, renderLargerThumbnail: true, mediaType: 1, mediaUrl: '', sourceUrl: "https://github.com/Loki-Xer/Jarvis-md", showAdAttribution: true } } });
+        await message.sendFromUrl(thumbnail, { caption: menu })
     } else {
         await message.send(menu);
     }

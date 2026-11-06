@@ -22,7 +22,7 @@ System({
     const hash = message.reply_message.msg.fileSha256.join("");
     const setcmd = await setData(hash, match, "true", "setCmd");
     if (!setcmd) return await message.reply('_Failed_');
-    await message.reply('_Success_');
+    return await message.reply('_Success_');
 });
 
 System({
@@ -41,7 +41,7 @@ System({
     if (!hash) return await message.reply('_Failed_');
     const delcmd = await removeData(hash, "setCmd");
     if (!delcmd) return await message.reply('_Failed_');
-    await message.reply('_Success_');
+    return await message.reply('_Success_');
 });
 
 System({

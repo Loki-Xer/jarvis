@@ -40,6 +40,7 @@ System({
    desc: "to reboot your bot",
    type: "server",
 }, async (message, match) => {
-    await message.reply('_Rebooting..._')
+    await message.reply('_Rebooting..._');
     bot.restart();
+    return message;
 });

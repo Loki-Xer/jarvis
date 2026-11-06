@@ -31,7 +31,7 @@ System({
         for (let i = 0; i < participants.length; i++) {
             msg += `${i + 1}. @${participants[i].id.split('@')[0]}\n`;
         }
-        await message.send(msg, { mentions: participants.map(a => a.id) });
+        return await message.send(msg, { mentions: participants.map(a => a.id) });
     } else if (match === "admin" || match === "admins") {
         for (let i = 0; i < admins.length; i++) {
             msg += `${i + 1}. @${admins[i].split('@')[0]}\n`;
@@ -44,11 +44,11 @@ System({
         mentionedJid.forEach((e) => (msg += `@${e.split('@')[0]}\n`))
         return await message.send(msg.trim(), { contextInfo: { mentionedJid }, });
     } else if (match === "me" || match === "mee") {
-        await message.send(`@${message.sender.split("@")[0]}`, { mentions: [message.sender], emitOnUpsert: true });
+        return await message.send(`@${message.sender.split("@")[0]}`, { mentions: [message.sender], emitOnUpsert: true });
     } else if (match || message.reply_message.text) {
         match = match || message.reply_message.text;
         if (!match) return await message.reply('*Example :* \n_*tag all*_\n_*tag admin*_\n_*tag text*_\n_*Reply to a message*_');
-        await message.send(match, { mentions: participants.map(a => a.id) });
+        return await message.send(match, { mentions: participants.map(a => a.id) });
     } else if (message.quoted) {
         return await message.client.forwardMessage(message.jid, message.reply_message.message, { contextInfo: { mentionedJid: participants.map(a => a.id) } });
     } else {
@@ -71,7 +71,7 @@ System({
         const deleted = await Vote(message, {}, "delete");
         if (!deleted) return message.reply("*Vote message not found*");
         await message.send({ key: message.reply_message.data.key }, {}, 'delete');
-        await message.reply("*Vote message successfully deleted*");
+        return await message.reply("*Vote message successfully deleted*");
     } else if (match === "result" || match === "get") {
         if (!message.quoted) return message.reply("_*Reply to a vote message*_");
         const data = await Vote(message, {}, "result");
@@ -85,10 +85,10 @@ System({
             });
         }
         if (data.result.length > 0) formattedResult.unshift('*Vote Result ✨*\n\n');
-        await message.send(formattedResult.join('').trim(), { mentions: data.votersJid })
+        return await message.send(formattedResult.join('').trim(), { mentions: data.votersJid })
     } else {
         const regex = /^([^;]*;[^;]*\|[^;]*,[^;]*\|[^;]*)$/;
         if (!regex.test(match)) return message.reply("*The text is not in the correct format. Use* ```What's your favorite color?;😂|Blue,😟|Red```");
-        await Vote(message, { text: match }, "vote");
+        return await Vote(message, { text: match }, "vote");
     }
 });

@@ -46,6 +46,7 @@ System({
 }, async (message) => {
     if (!message.quoted) return await message.reply("_Reply to a message to delete it!_");
     await message.reply(message.reply_message.data.key, {}, "delete");
+    return message;
 });
 
 System({
@@ -55,7 +56,7 @@ System({
 	type: 'whatsapp'
 }, async (message, match) => {
 	await message.client.chatModify({ delete: true, lastMessages: [message.data] }, message.jid);
-	await message.reply('_Cleared.._')
+	return await message.reply('_Cleared.._')
 });
 
 System({
@@ -65,7 +66,7 @@ System({
 	type: 'whatsapp'
 }, async (message, match) => {
 	await message.client.chatModify({ archive: true, lastMessages: [message.data] }, message.jid);
-	await message.reply('_Archived.._')
+	return await message.reply('_Archived.._')
 });
 
 System({
@@ -75,7 +76,7 @@ System({
 	type: 'whatsapp'
 }, async (message, match) => {
 	await message.client.chatModify({ archive: false, lastMessages: [message.data] }, message.jid);
-	await message.reply('_Unarchived.._')
+	return await message.reply('_Unarchived.._')
 });
 
 System({
@@ -85,7 +86,7 @@ System({
 	type: 'whatsapp'
 }, async (message, match) => {
 	await message.client.chatModify({ pin: true }, message.jid);
-	await message.reply('_Pined.._')
+	return await message.reply('_Pined.._')
 });
 
 System({
@@ -95,7 +96,7 @@ System({
 	type: 'whatsapp'
 }, async (message, match) => {
 	await message.client.chatModify({ pin: false }, message.jid);
-	await message.reply('_Unpined.._')
+	return await message.reply('_Unpined.._')
 });
 
 System({
@@ -113,7 +114,7 @@ System({
     let jid = message.quoted ? message.reply_message.sender : !message.isGroup ? message.jid : false;
     if(!jid) return message.reply("*Reply to a user to block them or use 'block list' to view the block list.*");
     await message.client.updateBlockStatus(jid, "block");
-    await message.reply("_*Blocked!*_");
+    return await message.reply("_*Blocked!*_");
 });
 
 System({
@@ -135,7 +136,7 @@ System({
     let jid = message.quoted ? message.reply_message.sender : !message.isGroup ? message.jid : false;
     if(!jid) return message.reply("*Reply to a user to unblock them or use 'unblock all' to unblock all the block list.*");
     await message.client.updateBlockStatus(jid, "unblock");
-    await message.reply("_*Unblocked!*_");
+    return await message.reply("_*Unblocked!*_");
 });
 
 System({
@@ -147,7 +148,7 @@ System({
     match = match || message.reply_message.text;
     if (!match) return await message.send('*Need Status!*\n*Example: setbio Hey there! I am using WhatsApp*.');
     await message.client.updateProfileStatus(match);
-    await message.reply('_Profile bio updated_');
+    return await message.reply('_Profile bio updated_');
 });
 
 System({
@@ -159,7 +160,7 @@ System({
     match = match || message.reply_message.text;
     if (!match) return await message.send('*Need Name!*\n*Example: setname your name*.');
     await message.client.updateProfileName(match);
-    await message.reply('_Profile name updated_');
+    return await message.reply('_Profile name updated_');
 });
 
 System({
@@ -174,7 +175,7 @@ System({
     for (let jid of jids) {
         await message.client.forwardMessage(jid, message.reply_message.message);
     }
-    await message.reply("_Message forwarded_");
+    return await message.reply("_Message forwarded_");
 });
 
 System({
@@ -185,7 +186,7 @@ System({
 }, async (message, match) => {
     if (!message.reply_message.video && !message.reply_message.image && !message.image && !message.video) return await message.reply('*_Reply to an image or video_*');
     if (!match) return await message.reply("*Need a query, e.g., .caption Hello*");
-    await message.client.forwardMessage(message.jid, message.quoted ? message.reply_message.message : message.message, { caption: match });
+    return await message.client.forwardMessage(message.jid, message.quoted ? message.reply_message.message : message.message, { caption: match });
 });
 
 System({
@@ -197,7 +198,7 @@ System({
 	const { readreceipts, profile, status, online, last, groupadd, calladd } = await message.client.fetchPrivacySettings(true);
 	const msg = `*♺ my privacy*\n\n*ᝄ name :* ${message.client.user.name}\n*ᝄ online:* ${online}\n*ᝄ profile :* ${profile}\n*ᝄ last seen :* ${last}\n*ᝄ read receipt :* ${readreceipts}\n*ᝄ about seted time :*\n*ᝄ group add settings :* ${groupadd}\n*ᝄ call add settings :* ${calladd}`;
 	let img = await message.client.profilePictureUrl(message.user.jid, 'image').catch(() => "https://i.ibb.co/sFjZh7S/6883ac4d6a92.jpg");
-	await message.send(img, { caption: msg }, 'image');
+	return await message.send(img, { caption: msg }, 'image');
 });
 
 System({
@@ -210,7 +211,7 @@ System({
 	const available_privacy = ['all', 'contacts', 'contact_blacklist', 'none'];
 	if (!available_privacy.includes(match)) return await message.send(`_action must be *${available_privacy.join('/')}* values_`);
 	await message.client.updateLastSeenPrivacy(match);
-	await message.send(`_Privacy settings *last seen* Updated to *${match}*_`);
+	return await message.send(`_Privacy settings *last seen* Updated to *${match}*_`);
 });
 
 
@@ -224,7 +225,7 @@ System({
 	const available_privacy = ['all', 'match_last_seen'];
 	if (!available_privacy.includes(match)) return await message.send(`_action must be *${available_privacy.join('/')}* values_`);
 	await message.client.updateOnlinePrivacy(match);
-	await message.send(`_Privacy Updated to *${match}*_`);
+	return await message.send(`_Privacy Updated to *${match}*_`);
 });
 
 
@@ -238,7 +239,7 @@ System({
 	const available_privacy = ['all', 'contacts', 'contact_blacklist', 'none'];
 	if (!available_privacy.includes(match)) return await message.send(`_action must be *${available_privacy.join('/')}* values_`);
 	await message.client.updateProfilePicturePrivacy(match)
-	await message.send(`_Privacy Updated to *${match}*_`);
+	return await message.send(`_Privacy Updated to *${match}*_`);
 });
 
 
@@ -252,7 +253,7 @@ System({
 	const available_privacy = ['all', 'contacts', 'contact_blacklist', 'none'];
 	if (!available_privacy.includes(match)) return await message.send(`_action must be *${available_privacy.join('/')}* values_`);
 	await message.client.updateStatusPrivacy(match)
-	await message.send(`_Privacy Updated to *${match}*_`);
+	return await message.send(`_Privacy Updated to *${match}*_`);
 });
 
 System({
@@ -265,7 +266,7 @@ System({
 	const available_privacy = ['all', 'none'];
 	if (!available_privacy.includes(match)) return await message.send(`_action must be *${available_privacy.join('/')}* values_`);
 	await message.client.updateReadReceiptsPrivacy(match);
-	await message.send(`_Privacy Updated to *${match}*_`);
+	return await message.send(`_Privacy Updated to *${match}*_`);
 });
 
 
@@ -279,7 +280,7 @@ System({
 	const available_privacy = ['all', 'contacts', 'contact_blacklist', 'none'];
 	if (!available_privacy.includes(match)) return await message.send(`_action must be *${available_privacy.join('/')}* values_`);
 	await message.client.updateGroupsAddPrivacy(match)
-	await message.send(`_Privacy Updated to *${match}*_`);
+	return await message.send(`_Privacy Updated to *${match}*_`);
 });
 
 System({
@@ -293,5 +294,5 @@ System({
     var array = { '24': 86400, '7': 604800, '30': 2592000 };
     var time = array[match];
     if (!time) return await message.reply(`_Reply to a message to pin it_\n\n*Example*: _msgpin 24 =for pin msg for 24 hour_\n _msgpin 7 = for pin msg for 7days_\n _msgpin 30 = for pin msg for 30 days_`);
-    await message.reply(message.reply_message.data.key, { type: 1, time }, "pin");
+    return await message.reply(message.reply_message.data.key, { type: 1, time }, "pin");
 });

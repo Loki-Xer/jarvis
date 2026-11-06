@@ -95,6 +95,7 @@ System({
     await setData(KEY, value, !!value, "vars");
     await m.reply(`_*Environment variable ${KEY} set to ${value}*_`);
     await bot.restart();
+    return m;
   }
 });
 
@@ -105,7 +106,7 @@ System({
     desc: "Show which platform you deployed",
 }, async (msg) => {
     const server = String(msg.client.server || "unknown");
-    await msg.reply("_*You are deployed on " + server.charAt(0).toUpperCase() + server.slice(1).toLowerCase() + "*_");
+    return await msg.reply("_*You are deployed on " + server.charAt(0).toUpperCase() + server.slice(1).toLowerCase() + "*_");
 });
 
 System({
@@ -171,7 +172,7 @@ System({
             s += `*${key}*: ${val}\n\n`;
         }
     }
-    await message.reply(s);
+    return await message.reply(s);
 });
 
 System({
@@ -184,10 +185,9 @@ System({
     const requestedVar = match.trim().toUpperCase();
     if (Object.prototype.hasOwnProperty.call(process.env, requestedVar) || Object.prototype.hasOwnProperty.call(Config, requestedVar)) {
         const value = isSecret(requestedVar) ? "[hidden]" : (process.env[requestedVar] || Config[requestedVar]);
-        await message.reply(`*${requestedVar}*: ${value}`);
-    } else {
-        await message.reply(`_*Variable '${requestedVar}' not found.*_`);
-    }
+        return await message.reply(`*${requestedVar}*: ${value}`);
+    };
+    return await message.reply(`_*Variable '${requestedVar}' not found.*_`);
 });
 
 System({
@@ -196,7 +196,7 @@ System({
     type: "server",
     desc: "shows sudo",
 }, async (message) => {
-    await message.reply("_*SUDO NUMBER'S ARE :*_ " + "```" + Config.SUDO + "```");
+    return await message.reply("_*SUDO NUMBER'S ARE :*_ " + "```" + Config.SUDO + "```");
 });
 
 System({
@@ -207,7 +207,7 @@ System({
 }, async (message) => {
     if (message.client.server !== "HEROKU") return await message.reply(`_this cmd for heroku_`);
     if (!Config.HEROKU_API_KEY) return await message.send("*Can't find HEROKU_API_KEY*");
-    await message.reply(await heroku.dyno());
+    return await message.reply(await heroku.dyno());
 });
 
 System({

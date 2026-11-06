@@ -22,7 +22,7 @@ System({
    if (match && m.quoted && match !== m.reply_message?.text) match += "\n" + m.reply_message.text;
    if (!match) return m.reply("_*need query !!*_\n_*eg: .chatgpt create a simple html page*_");
    const res = await chatgpt(match);
-   await m.send(res.response, { contextInfo: { forwardingScore: 1, isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363197401188542@newsletter", newsletterName: "chatgpt" }}});
+   return await m.send(res.response, { contextInfo: { forwardingScore: 1, isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363197401188542@newsletter", newsletterName: "chatgpt" }}});
 });
 
 System({
@@ -35,7 +35,7 @@ System({
   if (!(match || message.quoted) || (message.quoted && !message.reply_message.image)) return message.reply("_*Need Prompt !!*_\n_*eg: .gemini who is iron man?*_\n _For image you have to Reply to an image and also give a prompt_");
   const path = message.quoted && message.reply_message?.image ? await message.reply_message.downloadAndSaveMedia() : null;
   const res = await gemini(match, path);
-  await message.send(res, { contextInfo: { forwardingScore: 1, isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: '120363197401188542@newsletter', newsletterName: 'ɢᴇᴍɪɴɪ ᴀɪ' } } });
+  return await message.send(res, { contextInfo: { forwardingScore: 1, isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: '120363197401188542@newsletter', newsletterName: 'ɢᴇᴍɪɴɪ ᴀɪ' } } });
 });
 
 System({

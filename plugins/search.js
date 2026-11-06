@@ -41,7 +41,7 @@ System({
           } catch {}
       }
   };
-  await msg.edit("*Downloaded*");
+  return await msg.edit("*Downloaded*");
 });
 
 System({
@@ -53,7 +53,7 @@ System({
 }, async (message, match) => {
     if (!match || isUrl(match)) return await message.reply('_Please provide a valid query_');
     const data = await getJson(api + `search/xnxx?q=${encodeURIComponent(match)}`);
-    await message.send(data.result.map(item => `*💎 Title:* ${item.title}\n*🔗 Link:* ${item.link}\n\n`).join(""));
+    return await message.send(data.result.map(item => `*💎 Title:* ${item.title}\n*🔗 Link:* ${item.link}\n\n`).join(""));
 });
 
 System({
@@ -65,5 +65,5 @@ System({
   if (!match) return await message.reply("*Need a query to search*\n_Example: who is iron man_");
   let result = await duckGo(match);
   if (!result.length) return await message.reply("*Can't find, try again with more info*");
-  await message.reply(`*⬢ Title :* ${result[0].title}\n\n*⬢ Description :* ${result[0].description}\n\n*⬢ Link :* ${result[0].link}`);    
+  return await message.reply(`*⬢ Title :* ${result[0].title}\n\n*⬢ Description :* ${result[0].description}\n\n*⬢ Link :* ${result[0].link}`);    
 });

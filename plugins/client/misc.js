@@ -147,9 +147,29 @@ const cleanTitle = (title) => {
         .trim();
 };
 
+
+async function readMore() {
+  const readmore = String.fromCharCode(8206).repeat(4001);
+  return readmore;
+};
+
+const clockString = (duration) => {
+    let seconds = Math.floor((duration / 1000) % 60),
+        minutes = Math.floor((duration / (1000 * 60)) % 60),
+        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+    
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+    return hours + ":" + minutes + ":" + seconds;
+};
+
 module.exports = { 
   getCurrencyByPhoneNumber,
   formatDuration,
   formatViews,
-  cleanTitle
+  cleanTitle, 
+  readMore,
+  clockString
 };

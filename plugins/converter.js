@@ -50,7 +50,7 @@ System({
    var audioResult = await toAudio(await message.reply_message.download());
    const [firstName, author, image] = config.AUDIO_DATA.split(";");
    const aud = await AddMp3Meta(audioResult, await getBuffer(image), { title: firstName, body: author });
-   await message.reply(aud, { mimetype: "audio/mp4" }, "audio");
+   return await message.reply(aud, { mimetype: "audio/mp4" }, "audio");
 });
 
 System({
@@ -61,7 +61,7 @@ System({
 }, async (message) => {
    if (!message.video && !message.reply_message.video) return message.reply("_*Reply to a video*_");
    const buff = await message.downloadMediaMessage(message.video ? message.msg : message.quoted ? message.reply_message.msg : null);
-   await message.reply(buff, { ptv: true }, "video");
+   return await message.reply(buff, { ptv: true }, "video");
 });
 
 System({
@@ -102,11 +102,11 @@ System({
         ffmpeg.input(audioFile);
         ffmpeg.output('./lib/temp/videoMixed.mp4');
         ffmpeg.on('end', async () => {
-            await message.send(fs.readFileSync('./lib/temp/videoMixed.mp4'), {}, 'video');
+            return await message.send(fs.readFileSync('./lib/temp/videoMixed.mp4'), {}, 'video');
         });
         ffmpeg.on('error', async (err) => {
             console.error('FFmpeg error:', err);
-            await message.reply("An error occurred during video conversion.");
+            return await message.reply("An error occurred during video conversion.");
         });
         ffmpeg.run();
 });
@@ -168,7 +168,7 @@ System({
     if (!db.removeBg) return m.reply(`*Dear user, get an API key to use this command. Sign in to remove.bg and get an API key. After that, use* \n\n *${m.prefix} rbg key: _your API key_* \n\n Sign in here: https://www.remove.bg/dashboard#api-key`);
     let buff = await removeBg(await m.downloadAndSaveMediaMessage(m.image ? m.msg : m.quoted ? m.reply_message.msg : null), db.removeBg.message);
     if(!buff) return m.reply("*Error in api key or can't upload to remove.bg*");
-    await m.reply(buff, {}, "image");
+    return await m.reply(buff, {}, "image");
 });
 
 System({
@@ -187,12 +187,12 @@ System({
         const file = await m.downloadMediaMessage(m.video ? m.msg : m.quoted ? m.reply_message.msg : null);
         const output = await trim(file, parts[0], parts[1]);
         if (!output) return m.reply("*Please check your format. The correct format is .trim 0:00,1:10*"); 
-        await m.reply(output, {}, "video");
+        return await m.reply(output, {}, "video");
     } else if (m.reply_message.audio) {
         const file = await toVideo(await m.reply_message.downloadAndSave());
         const output = await trim(file, parts[0], parts[1]);
         if (!output) return m.reply("*Please check your format. The correct format is .trim 0:00,1:10*");
-        await m.reply(output, { mimetype: "audio/mp4" }, "audio");
+        return await m.reply(output, { mimetype: "audio/mp4" }, "audio");
     }
 });
 

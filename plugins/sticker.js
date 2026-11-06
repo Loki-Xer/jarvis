@@ -31,7 +31,7 @@ System({
    if (!(message.image || message.video || message.reply_message.video || message.reply_message.image)) return await message.reply("_Reply to photo or video_"); 
    let media = (message.video || message.image)? message.msg : message.quoted? message.reply_message.msg : null;  
    let buff = await message.downloadMediaMessage(media);
-   await message.send(buff, { packname: stickerPackNameParts[0], author: stickerPackNameParts[1] }, "sticker");
+   return await message.send(buff, { packname: stickerPackNameParts[0], author: stickerPackNameParts[1] }, "sticker");
 });
 
 System({
@@ -48,7 +48,7 @@ System({
    const stickerPackName = exif['sticker-pack-name'];
    const stickerPackPublisher = exif['sticker-pack-publisher'];
    const cap = (`*Sticker Pack ID -->* ${stickerPackId}\n\n*Pack name -->* ${stickerPackName}\n\n*Publisher Name -->* ${stickerPackPublisher}`)
-   await message.reply(cap);
+   return await message.reply(cap);
 });
 
 System({
@@ -61,14 +61,15 @@ System({
    if (!message.quoted || (!message.reply_message.sticker && !message.reply_message.audio)) return await message.reply("_Reply to a sticker or audio_");
    if (message.reply_message.sticker) {
     const stickerPackName = (match || config.STICKER_PACKNAME).split(";");
-    await message.send(await message.reply_message.download(), { packname: stickerPackName[0], author: stickerPackName[1] }, "sticker");
+    return await message.send(await message.reply_message.download(), { packname: stickerPackName[0], author: stickerPackName[1] }, "sticker");
    } else if (message.reply_message.audio) {
     const buff = await message.reply_message.download();
     const audioBuffer = Buffer.from(buff);
     const audioResult = await toAudio(audioBuffer, 'mp4');
     data = match ? match.split(";") : config.AUDIO_DATA.split(";");
-    await message.reply(await AddMp3Meta(audioResult, await getBuffer(data[2]), { title: data[0], body: data[1] }), { mimetype: "audio/mp4" }, "audio");
-   }
+    return await message.reply(await AddMp3Meta(audioResult, await getBuffer(data[2]), { title: data[0], body: data[1] }), { mimetype: "audio/mp4" }, "audio");
+   };
+   return message;
 });
 
 System({
@@ -107,7 +108,7 @@ System({
    if(message.image || message.reply_message.image) {
     return await message.send(await cropToCircle(media), {}, 'image');
    };
-   await message.send(await createRoundSticker(media), { packname: stickerPackNameParts[0], author: stickerPackNameParts[1] }, "sticker");
+   return await message.send(await createRoundSticker(media), { packname: stickerPackNameParts[0], author: stickerPackNameParts[1] }, "sticker");
 });
 
 System({
@@ -122,5 +123,5 @@ System({
     let media = await message.downloadMediaMessage(message.image ? message : message.quoted ? message.reply_message : null);
     return await message.send(await cropImage(media), {}, 'image');
    };
-   await message.send(await cropImage(await webpToPng(await message.reply_message.downloadAndSave())), { packname: stickerPackNameParts[0], author: stickerPackNameParts[1] }, "sticker");
+   return await message.send(await cropImage(await webpToPng(await message.reply_message.downloadAndSave())), { packname: stickerPackNameParts[0], author: stickerPackNameParts[1] }, "sticker");
 });

@@ -24,24 +24,24 @@ System({
 	fromMe: false,
 	dontAddCommandList: true
 }, async (message, match) => {
-	if(message.fromMe) return;
-	if (!AFK.isAfk)  return;
-	if(!message.mention.isBotNumber && !message.quoted && message.isGroup)  return;
+	if(message.fromMe) return false;
+	if (!AFK.isAfk)  return false;
+	if(!message.mention.isBotNumber && !message.quoted && message.isGroup) return false;
 	if (message.mention.isBotNumber && message.isGroup) {
-   	    await message.send('```This is a bot. My owner is not here at the moment```\n' +
+   	    return await message.send('```This is a bot. My owner is not here at the moment```\n' +
 		              (AFK.reason !== false ? '\n*Reason:* ```' + AFK.reason + '```' : '') +
 		    	      (AFK.lastseen !== 0 ? '\n*Last Seen:* ```' + secondsToHms(Math.round((new Date()).getTime() / 1000) - AFK.lastseen) + '```' : ''), {
 			      quoted: message.data
 			    });
 	} else if (message.isGroup && message.reply_message.sender == message.user.jid) {
-	    await message.send('```This is a bot. My owner is not here at the moment```\n' +
+	    return await message.send('```This is a bot. My owner is not here at the moment```\n' +
 			      (AFK.reason !== false ? '\n*Reason:* ```' + AFK.reason + '```' : '') +
 			      (AFK.lastseen !== 0 ? '\n*Last Seen:* ```' + secondsToHms(Math.round((new Date()).getTime() / 1000) - AFK.lastseen) + '```' : ''), {
 			      quoted: message.data
 			   });
 
 	} else if(!message.isGroup) {
-	    await message.send('```This is a bot. My owner is not here at the moment```\n' +
+	    return await message.send('```This is a bot. My owner is not here at the moment```\n' +
 				(AFK.reason !== false ? '\n*Reason:* ```' + AFK.reason + '```' : '') +
 				(AFK.lastseen !== 0 ? '\n*Last Seen:* ```' + secondsToHms(Math.round((new Date()).getTime() / 1000) - AFK.lastseen) + '```' : ''), {
 				quoted: message.data
@@ -60,7 +60,7 @@ System({
 	AFK.lastseen = 0;
 	AFK.reason = false;
 	AFK.isAfk = false;
-	await message.send('```I am not AFK anymore!```');
+	return await message.send('```I am not AFK anymore!```');
 });
 
 System({
@@ -73,5 +73,5 @@ System({
 	AFK.lastseen = Math.round((new Date()).getTime() / 1000);
 	if (match !== '') AFK.reason = match;
 	AFK.isAfk = true;
-	await message.send(AFK.reason ? '*_Im AFK now!_*\n*Reason:* ' + AFK.reason :  '*_Im AFK now!_*');
+	return await message.send(AFK.reason ? '*_Im AFK now!_*\n*Reason:* ' + AFK.reason :  '*_Im AFK now!_*');
 });

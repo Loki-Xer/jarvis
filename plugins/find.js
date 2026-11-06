@@ -89,5 +89,5 @@ System({
     const yt = await yts(title);
 
     const cap = `*_${yt[0].title}_*\n\n\n*Album :* ${album.name || ''}\n*Artists :* ${artists !== undefined ? artists.map((v) => v.name).join(', ') : ''}\n*Release Date :* ${release_date}\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_`;
-    await message.send({ url: yt[0].image }, { caption: cap }, "image");
+    return await message.send({ url: yt[0].image }, { caption: cap }, "image");
 });

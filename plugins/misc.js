@@ -42,7 +42,7 @@ System({
   let url = (await extractUrlsFromText(match || message.reply_message.text))[0];
   if (!url) return await message.reply(`*Please provide a URL*`);
   if (!isUrl(url)) return await message.reply(`*Please provide a valid URL*`);
-  await message.sendFromUrl(api + "tools/ssweb?q=" + url, { caption: `*Screenshot of ${url}*` });
+  return await message.sendFromUrl(api + "tools/ssweb?q=" + url, { caption: `*Screenshot of ${url}*` });
 });
 
   System({
@@ -52,7 +52,7 @@ System({
       type: "misc",
   }, async (message) => {
      if (!message.quoted) return;
-     await message.client.forwardMessage(message.user.jid, message.reply_message.message);
+     return await message.client.forwardMessage(message.user.jid, message.reply_message.message);
   });
 
 
@@ -119,6 +119,6 @@ System({
       }
       const response = await gtts(match, LANG);
       const audio = await toAudio(response, 'opus');
-      await message.reply(audio, { mimetype: 'audio/ogg; codecs=opus', ptt: true }, "audio");
+      return await message.reply(audio, { mimetype: 'audio/ogg; codecs=opus', ptt: true }, "audio");
   });
   

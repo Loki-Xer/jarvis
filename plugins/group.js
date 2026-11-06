@@ -83,13 +83,13 @@ System({
             const jid = parsedJid(key.id);
             await message.client.groupParticipantsUpdate(message.jid, jid, "remove");
             if (config.KICK_BLOCK) await message.client.updateBlockStatus(jid[0], "block");
-            await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid });
+            return await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid });
         }
     } else {
         const jid = parsedJid(match);
         await message.client.groupParticipantsUpdate(message.jid, jid, "remove");
         if (config.KICK_BLOCK) await message.client.updateBlockStatus(jid[0], "block");
-        await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid, });
+        return await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid, });
     }
 });
 
@@ -144,7 +144,7 @@ System({
     let userIsAdmin = await isAdmin(message, user);
     if (userIsAdmin) return await message.send(`_user is admin @${jid[0].split("@")[0]}_`, { mentions: jid });
     const name = await message.store.getName(user);
-    await warnMessage(message, match, user, name);
+    return await warnMessage(message, match, user, name);
 });
 
 System({
@@ -156,7 +156,7 @@ System({
     let gName = match || m.pushName;
     if (!m.reply_message.sender) return m.reply("*To create group with someone*\n_Example : . create @user/reply_");
     const group = await m.client.groupCreate(gName, [m.reply_message.sender, m.sender]);
-    await m.send("_Group successfully created_ ");
+    return await m.send("_Group successfully created_ ");
 });
 
 System({

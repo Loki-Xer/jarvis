@@ -27,7 +27,7 @@ System({
             "Accept-Language": "en-US,en;q=0.9"
         }
     });
-    await message.send(buffer, { caption: "*Here is your waifu*", quoted: message.data }, "image");
+    return await message.send(buffer, { caption: "*Here is your waifu*", quoted: message.data }, "image");
 });
 
 System({
@@ -45,5 +45,5 @@ System({
             "Accept-Language": "en-US,en;q=0.9"
         }
     });
-    await message.send(buffer, { caption: "*Here is your neko*", quoted: message.data }, "image");
+    return await message.send(buffer, { caption: "*Here is your neko*", quoted: message.data }, "image");
 });

@@ -32,7 +32,7 @@ System({
     const { loginData } = await getData(m.user.number);
     const runtime = await Runtime(loginData.message);
     if(m.fromMe) return await m.edit(runtime);
-    m.reply(runtime);
+    return await m.reply(runtime);
 });
 
 System({

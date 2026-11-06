@@ -17,6 +17,7 @@ System({
     await setSchedule(jid, newFormat, "true", message.reply_message.message);
     await message.send(`_successfully scheduled to send at ${time}_`);
     bot.restart();
+    return message;
 });
 
 System({
@@ -32,7 +33,7 @@ System({
         const contentType = Object.keys(item.content || {})[0] || 'unknown';
         return `*Jid:* ${item.jid}\n*Date:* ${date}\n*Message Type:* ${contentType}`;
   }))).join("\n\n")}`;
-  await message.reply(responseText);
+  return await message.reply(responseText);
 });
 
 
@@ -52,4 +53,5 @@ System({
     if(!schedule.status) return await message.send('_Schedule not found_');
     await message.send('_Schedule deleted_');
     bot.restart();
+    return message;
 });

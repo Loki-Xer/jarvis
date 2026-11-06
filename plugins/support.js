@@ -18,7 +18,7 @@ System({
     desc: "To get all plugin of jarvis-md",
     type: "support"
 }, async (message) => {
-    message.reply('*Find Your Favourite Plugins*\n\n*Browse plugins, copy your favourite, and install it. You can also add your own plugins!*\n\n*Explore and Sign Up:*\n\nhttps://jarvis-md.vercel.app/plugins');
+    return await message.reply('*Find Your Favourite Plugins*\n\n*Browse plugins, copy your favourite, and install it. You can also add your own plugins!*\n\n*Explore and Sign Up:*\n\nhttps://jarvis-md.vercel.app/plugins');
 });
 
 
@@ -30,5 +30,5 @@ System({
 }, async (message) => {
     const data = await getJson("https://api.github.com/repos/Loki-Xer/jarvis");
     const text = `\n${data.description || ""}\n\n\n▢ *Stars:* ${data.stargazers_count}\n▢ *Forks:* ${data.forks_count}\n▢ *Watchers:* ${data.watchers_count}\n▢ *Language:* ${data.language}\n▢ *Open Issues:* ${data.open_issues_count}\n\n*Repo:* ${data.html_url}\n*Deploy:* https://jarvis-md.vercel.app/\n`;
-    message.send(text);
+    return await message.send(text);
 });

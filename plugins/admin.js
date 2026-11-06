@@ -38,7 +38,7 @@ System({
     let isadmin = await isBotAdmins(message);
     if (!isadmin) return await message.reply("_I'm not admin_");
     await message.client.groupRevokeInvite(message.jid)
-    await message.send('_Revoked_');
+    return await message.send('_Revoked_');
 });
 
 System({
@@ -55,9 +55,9 @@ System({
         const groupCode = match.split('https://chat.whatsapp.com/')[1];
         const joinResult = await message.client.groupAcceptInvite(groupCode);
         if (joinResult) return await message.reply('_Joined!_'); 
-        await message.reply('_Invalid Group Link!_'); 
+        return await message.reply('_Invalid Group Link!_'); 
     } else {
-        await message.reply('_Invalid Group Link!_'); 
+        return await message.reply('_Invalid Group Link!_'); 
     }
 });
 
@@ -69,6 +69,7 @@ System({
     desc: 'Left from group'
 }, async (message) => {
     await message.client.groupLeave(message.jid);
+    return message;
 });
 
 System({
@@ -84,7 +85,7 @@ System({
         const participantJids = participants.map(u => u.id).join("\n\n")
         return message.reply(`*Group Participants Jid*\n\n*Group Name:* ${subject}\n*All Participants Jid*\n\n${participantJids}`);
     };
-    await message.send("\n*Group Jid Info 🎏*\n", { values: [ { displayText: "*All Group Info*", id: "gjid info" }, { displayText: "*Group Participants Jid*", id: "gjid participants jid" } ], withPrefix: true, participates: [message.sender] }, "poll");
+    return await message.send("\n*Group Jid Info 🎏*\n", { values: [ { displayText: "*All Group Info*", id: "gjid info" }, { displayText: "*Group Participants Jid*", id: "gjid participants jid" } ], withPrefix: true, participates: [message.sender] }, "poll");
 });
 
 System({
@@ -101,7 +102,7 @@ System({
     const response = await message.groupInviteInfo(invite);
     if (!response) return await message.reply('*Invalid invite link*');
     const profile = await message.getPP(response.id);
-    await message.send(profile, { caption: "id: " + response.id + "\nsubject: " + response.subject + "\nowner: " + `${response.owner ? response.owner.split('@')[0] : 'unknown'}` + "\nsize: " + response.size + "\nrestrict: " + response.restrict + "\nannounce: " + response.announce + "\ncreation: " + require('moment-timezone')(response.creation * 1000).tz('Asia/Kolkata').format('DD/MM/YYYY HH:mm:ss') + "\ndesc: " + response.desc }, "image");
+    return await message.send(profile, { caption: "id: " + response.id + "\nsubject: " + response.subject + "\nowner: " + `${response.owner ? response.owner.split('@')[0] : 'unknown'}` + "\nsize: " + response.size + "\nrestrict: " + response.restrict + "\nannounce: " + response.announce + "\ncreation: " + require('moment-timezone')(response.creation * 1000).tz('Asia/Kolkata').format('DD/MM/YYYY HH:mm:ss') + "\ndesc: " + response.desc }, "image");
 })
 
 System({
@@ -114,7 +115,7 @@ System({
 }, async (message, match) => {
     const result = await message.client.groupRequestParticipantsList(message.jid);
     if (!result.length) return await message.send('_*no pending requests*_');
-    await message.send("*pending requests list*\n\n" + result.map((id) => `+${id.jid.split('@')[0]}`).join('\n'));
+    return await message.send("*pending requests list*\n\n" + result.map((id) => `+${id.jid.split('@')[0]}`).join('\n'));
 });
 
 System({
@@ -135,7 +136,7 @@ System({
         await message.client.groupRequestParticipantsUpdate(message.jid, [jid], 'approve');
         await sleep(800);
     };
-    await message.send(match === "all" ? '_*Approved all*_' : '_*Approved selected members*_');
+    return await message.send(match === "all" ? '_*Approved all*_' : '_*Approved selected members*_');
 });
 
 System({
@@ -156,5 +157,5 @@ System({
         await message.client.groupRequestParticipantsUpdate(message.jid, [jid], 'reject');
         await sleep(800);
     };
-    await message.send(match === "all" ? '_*Reject all*_' : '_*Reject selected members*_');
+    return await message.send(match === "all" ? '_*Reject all*_' : '_*Reject selected members*_');
 });

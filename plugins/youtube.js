@@ -58,12 +58,12 @@ System({
           const { title, author, thumbnail } = await YtInfo(matchUrl);
           await message.reply("_*" + "downloading " + title + "*_");
           const aud = await AddMp3Meta(await toAudio(await getBuffer(url)), await getBuffer(thumbnail), { title: title, body: author });
-          await message.reply(aud, { mimetype: 'audio/mpeg' }, "audio");
+          return await message.reply(aud, { mimetype: 'audio/mpeg' }, "audio");
       } else {
           const { title, author, thumbnail, url } = (await yts(match))[0];
           await message.reply("_*" + "downloading " + title + "*_");
           const aud = await AddMp3Meta(await toAudio(await getBuffer((await youtube(url)).url)), await getBuffer(thumbnail), { title: title, body: author.name });
-          await message.reply(aud, { mimetype: 'audio/mpeg' }, "audio");
+          return await message.reply(aud, { mimetype: 'audio/mpeg' }, "audio");
      }
 });
 
@@ -91,9 +91,9 @@ System({
     fromMe: isPrivate,
     dontAddCommandList: true,
   }, async (message) => {
-    if (message.isBot || !message.quoted) return
-    if (!message.reply_message.fromMe || !message.reply_message.text) return;
-    if (!message.body.includes('⬢')) return;
+    if (message.isBot || !message.quoted) return false;
+    if (!message.reply_message.fromMe || !message.reply_message.text) return false;
+    if (!message.body.includes('⬢')) return false;
     let match = message.body.replace('⬢', '');
     if (message.body.includes('1')) {
       const ytAudio = (await yts(match))[0];
@@ -104,7 +104,7 @@ System({
     } else if (message.body.includes('2')) {
       const data = (await yts(match))[0];
       const q = await message.send(`_*Now playing : ${data.title} 🎶*_`);
-      await message.send(
+      return await message.send(
         await getBuffer((await youtube(data.url, "video")).url), { caption: `_*${data.title}*_`, quoted: q }, 'video');
     };
   });
@@ -119,7 +119,7 @@ System({
       if (isUrl(match)) {
         let matchUrl = (await extractUrlsFromText(match))[0];
         const yt = await YtInfo(matchUrl);
-        await message.reply({ url: yt.thumbnail }, { caption: `*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_` }, 'image');
+        return await message.reply({ url: yt.thumbnail }, { caption: `*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_` }, 'image');
       } else {
         const result = (await yts(match)).slice(0, 12);
         const options = result.map((u) => ({ displayText: `*${cleanTitle(u.title)}*\n*Author:* ${u.author || "Unknown"}\n*Duration:* ${formatDuration(u.duration)}\n*Views:* ${formatViews(u.views)}\n*Published:* ${u.publishedTime || "Unknown"}`, id: `play ${u.url}`, image: u.image }));

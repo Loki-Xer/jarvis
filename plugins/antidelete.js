@@ -29,17 +29,17 @@ System({
     if (match === "off") {
         const jid = antidelete && antidelete.message ? antidelete.message : "chat";
         await setData(message.user.id, jid, "false", "antidelete");
-        await message.reply("_*antidelete disabled*_");
+        return await message.reply("_*antidelete disabled*_");
     } else if (match === "on") {
         const jid = antidelete && antidelete.message ? antidelete.message : "chat";
         await setData(message.user.id, jid, "true", "antidelete");
-        await message.reply("_*antidelete enabled*_");
+        return await message.reply("_*antidelete enabled*_");
     } else {
         const [jid] = await parsedJid(match);
         if (!jid && match !== "chat" && match !== "pm") return await message.reply("*Example:*\n\n_*antidelete on/off*_\n_*antidelete jid/chat/pm*_");
         const status = antidelete?.status || "false";
         await setData(message.user.id, jid || match, status, "antidelete");
-        await message.reply(`_*antidelete set to ${jid || match}*_`);
+        return await message.reply(`_*antidelete set to ${jid || match}*_`);
     }
 });
 
@@ -55,16 +55,16 @@ System({
     if (match === "off") {
         const jid = antiviewones && antiviewones.message ? antiviewones.message : "chat";
         await setData(message.user.id, jid, "false", "antiviewones");
-        await message.reply("_*antiviewones disabled*_");
+        return await message.reply("_*antiviewones disabled*_");
     } else if (match === "on") {
         const jid = antiviewones && antiviewones.message ? antiviewones.message : "chat";
         await setData(message.user.id, jid, "true", "antiviewones");
-        await message.reply("_*antiviewones enabled*_");
+        return await message.reply("_*antiviewones enabled*_");
     } else {
         const [jid] = await parsedJid(match);
         if (!jid && match !== "chat" && match !== "pm") return await message.reply("*Example:*\n\n_*antiviewones on/off*_\n_*antiviewones jid/chat/pm*_");
         const status = antiviewones?.status || "false";
         await setData(message.user.id, jid || match, status, "antiviewones");
-        await message.reply(`_*antiviewones set to ${jid || match}*_`);
+        return await message.reply(`_*antiviewones set to ${jid || match}*_`);
     };
 });

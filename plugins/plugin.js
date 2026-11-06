@@ -71,7 +71,7 @@ System({
     } else {
       const { plugin } = await getData(match);
       if(!plugin) return message.reply("_*Plugin not found*_");
-      await message.reply(plugin.message);
+      return await message.reply(plugin.message);
     }
   }
 });
@@ -93,5 +93,6 @@ System({
        fs.unlinkSync(pluginPath);
        await message.send(`_*Plugin ${match} deleted successfully bot is restarting*_`);
        await bot.restart();
+       return message;
     }
 });

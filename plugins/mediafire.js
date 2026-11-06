@@ -35,4 +35,5 @@ System({
         }, "document");
         await downloadMessage.edit("_*Download complete!*_");
     }
+    return message;
 });

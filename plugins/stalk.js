@@ -29,7 +29,7 @@ System({
     + '➤ *Following   :* ' + msg.following + '\n'
     + '➤ *Posts       :* ' + msg.posts + '\n\n'
     + '*Bio:*\n' + (msg.bio || '_No bio available_') + '\n'
-  await m.send({ url: msg.profilePic || 'https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png' }, { caption: cap, quoted: m, footer: '*JARVIS-MD*' }, "image");
+  return await m.send({ url: msg.profilePic || 'https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png' }, { caption: cap, quoted: m, footer: '*JARVIS-MD*' }, "image");
 });
 
 
@@ -43,7 +43,7 @@ System({
     const data = await getJson(`https://api.github.com/users/${match}`);
     const GhUserPP = data.avatar_url || "https://graph.org/file/924bcf22ea2aab5208489.jpg";
     const userInfo = `\n⎔ *Username* : ${data.login} \n⎔ *Name* : ${data.name || "Not Available"} \n⎔ *Bio* : ${data.bio || "Not Available"} \n\n➭ *ID* : ${data.id}\n➭ *Followers* : ${data.followers}\n➭ *Following* : ${data.following}\n➭ *Type* : ${data.type}\n➭ *Company* : ${data.company || "Not Available"}\n➭ *Public Repos* : ${data.public_repos}\n➭ *Public Gists* : ${data.public_gists}\n➭ *Email* : ${data.email || "Not Available"}\n➭ *Twitter* : ${data.twitter_username || "Not Available"}\n➭ *Location* : ${data.location || "Not Available"}\n➭ *Blog* : ${data.blog || "Not Available"}\n➭ *Profile URL* : ${data.html_url}\n➭ *Created At* : ${data.created_at}\n\n`;
-    await message.send({ url: GhUserPP }, { caption: userInfo }, "image");
+    return await message.send({ url: GhUserPP }, { caption: userInfo }, "image");
 });
 
 System({
@@ -65,7 +65,7 @@ System({
     + `*➥ꜰᴏʟʟᴏᴡɪɴɢ:* ${stats.followingCount}\n`
     + `*➥ʜᴇᴀʀᴛꜱ:* ${stats.heartCount}\n`
     + `*➥ᴠɪᴅᴇᴏꜱ:* ${stats.videoCount}`;
-  await message.send({ url: user.avatarLarger }, { caption }, "image");
+  return await message.send({ url: user.avatarLarger }, { caption }, "image");
 });
 
 System({
@@ -94,5 +94,5 @@ System({
     Chat: p.googleChat?.customerID, Plus: p.googlePlus?.enterpriseUser,
     Maps: p.mapsData?.profilePage, IP: p.ipAddress, Cal: p.calendar
   }).filter(([_, v]) => v).map(([k, v]) => `*${k}:* ${v}`).join('\n');
-  await m.send({ url: p.photoProfile || 'https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png' }, { caption: cap, quoted: m, footer: '*JARVIS-MD*' }, "image");
+  return await m.send({ url: p.photoProfile || 'https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png' }, { caption: cap, quoted: m, footer: '*JARVIS-MD*' }, "image");
 });
