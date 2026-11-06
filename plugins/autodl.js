@@ -6,7 +6,7 @@ System({
   fromMe: isPrivate,
   dontAddCommandList: true,
 }, async (message, match) => {
-  if (config.AUTO_DL) return;
+  if (!config.AUTO_DL) return;
   if (message.isBot || !match) return;
   try {
     const matches = (host, domain) => host === domain || host.endsWith("." + domain);
