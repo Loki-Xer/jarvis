@@ -119,7 +119,7 @@ System({
       if (isUrl(match)) {
         let matchUrl = (await extractUrlsFromText(match))[0];
         const yt = await YtInfo(matchUrl);
-        await message.reply(`*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_`, { contextInfo: { externalAdReply: { title: yt.author, body: yt.seconds, thumbnail: await getBuffer(yt.thumbnail), mediaType: 1, mediaUrl: yt.url, sourceUrl: yt.url, showAdAttribution: false, renderLargerThumbnail: true }}});
+        await message.reply({ url: yt.thumbnail }, { caption: `*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_` }, 'image');
       } else {
         const result = (await yts(match)).slice(0, 12);
         const options = result.map((u) => ({ displayText: `*${cleanTitle(u.title)}*\n*Author:* ${u.author || "Unknown"}\n*Duration:* ${formatDuration(u.duration)}\n*Views:* ${formatViews(u.views)}\n*Published:* ${u.publishedTime || "Unknown"}`, id: `play ${u.url}`, image: u.image }));

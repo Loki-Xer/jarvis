@@ -1,5 +1,6 @@
 node_modules/
 sessions/
+plugins/eval.js
 database.db
 *.db
 config.env
