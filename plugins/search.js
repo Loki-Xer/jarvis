@@ -10,7 +10,7 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-const { System, isPrivate, bing, duckGo } = require("../lib/");
+const { System, isPrivate, bing, bingSearch } = require("../lib/");
 const { IronMan, getJson, isUrl } = require('./client/');
 
 
@@ -57,13 +57,13 @@ System({
 });
 
 System({
-    pattern: '(duckgo|dg)',
+    pattern: '(bing|bg)',
     fromMe: isPrivate,
     type: "search",
-    desc: "goduck searcher"
+    desc: "Bing searcher"
 }, async (message, match) => {
   if (!match) return await message.reply("*Need a query to search*\n_Example: who is iron man_");
-  let result = await duckGo(match);
+  let result = await bingSearch(match);
   if (!result.length) return await message.reply("*Can't find, try again with more info*");
   return await message.reply(`*⬢ Title :* ${result[0].title}\n\n*⬢ Description :* ${result[0].description}\n\n*⬢ Link :* ${result[0].link}`);    
 });
