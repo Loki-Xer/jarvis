@@ -1,4 +1,4 @@
-const { System, isPrivate, spotifyMetaData, YtInfo, instaDL, config } = require("../lib/");
+const { System, isPrivate, spotifyMetaData, YtInfo, instaDL, config, pinDl } = require("../lib/");
 const { extractUrlsFromText, getJson, IronMan, platforms } = require("./client/");
 
 System({
@@ -23,7 +23,7 @@ System({
     if (platform.name === "Facebook") {
       const { result } = await getJson(api + "download/facebook?url=" + url);
       if (!result || (!result.hd && !result.sd)) return false;
-      return await message.sendFromUrl(result.sd, { quoted: message.data });
+      return await message.sendFromUrl(result.hd || result.sd, { quoted: message.data });
 
     } else if (platform.name === "Spotify") {
       if (url.includes("/playlist/")) return;
@@ -37,13 +37,10 @@ System({
       return await message.reply({ url: yt.thumbnail }, { caption: txt }, "image");
 
     } else if (platform.name === "GitHub") {
-      const [, , , user, repo] = url.split("/");
-      await message.reply(
-        { url: `https://api.github.com/repos/${user}/${repo}/zipball` },
-        { fileName: repo, mimetype: "application/zip" },
-        "document"
-      );
-
+      const [, , , user, rawRepo] = url.split("?")[0].split("#")[0].split("/");
+      if (!user || !rawRepo) return;
+      const repo = rawRepo.replace(/\.git$/, "");
+      return await message.reply({ url: `https://api.github.com/repos/${user}/${repo}/zipball` }, { fileName: repo, mimetype: "application/zip" }, "document");
     } else if (platform.name === "Instagram") {
       const data = await instaDL(url);
       if (!data || data.length === 0) return false;
@@ -57,7 +54,7 @@ System({
 
     } else if (platform.name === "Pinterest") {
       if (url.includes("pin.it")) {
-        const result = await pinDl(match);
+        const result = await pinDl(url);
         await message.sendFromUrl(result.url, { caption: "_*downloaded 🤍*_" });
       }
     }
