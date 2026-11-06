@@ -4,7 +4,6 @@ const { extractUrlsFromText, getJson, IronMan, platforms } = require("./client/"
 System({
   on: "text",
   fromMe: isPrivate,
-  pattern: "autocmd",
   dontAddCommandList: true,
 }, async (message, match) => {
   if (config.AUTO_DL) return;
