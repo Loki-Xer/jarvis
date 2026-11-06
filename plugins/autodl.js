@@ -1,5 +1,5 @@
 const { System, isPrivate, spotifyMetaData, YtInfo, instaDL, config } = require("../lib/");
-const { extractUrlsFromText, getJson, IronMan, platform } = require("./client/");
+const { extractUrlsFromText, getJson, IronMan, platforms } = require("./client/");
 
 System({
   on: "text",
