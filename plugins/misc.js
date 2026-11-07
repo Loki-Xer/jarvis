@@ -52,7 +52,7 @@ System({
       type: "misc",
   }, async (message) => {
      if (!message.quoted) return;
-     return await message.client.forwardMessage(message.user.jid, message.reply_message.message);
+     return await message.client.forwardMessage(message.user.jid, message.reply_message.data);
   });
 
 
