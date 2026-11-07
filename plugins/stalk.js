@@ -10,7 +10,7 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-const { System, isPrivate, config, ig } = require("../lib/");
+const { System, isPrivate, config } = require("../lib/");
 const { IronMan, getJson } = require('./client/');
 
 System({
@@ -20,7 +20,7 @@ System({
   type: 'stalk',
 }, async (m, match) => {
   if (!match) return m.reply("*Need a username*\n_Example: .ig sedboy.am_");
-  const { status, msg } = await ig(encodeURIComponent(match.trim()));
+  const { status, msg } = (await getJson(api + 'stalk/ig?query=' + encodeURIComponent(match.trim()))).result;
   if (status === 404 || status === 429 || status !== 200) return m.reply(msg || "Profile not found.");
   const cap = '\n'
     + '➤ *Username    :* ' + msg.username + '\n'
