@@ -29,7 +29,7 @@ System({
     + '➤ *Following   :* ' + msg.following + '\n'
     + '➤ *Posts       :* ' + msg.posts + '\n\n'
     + '*Bio:*\n' + (msg.bio || '_No bio available_') + '\n'
-  return await m.send({ url: msg.profilePic || 'https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png' }, { caption: cap, quoted: m, footer: '*JARVIS-MD*' }, "image");
+  return await m.send({ url: msg.profilePic || 'https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png' }, { caption: cap, quoted: m, footer: '*Made with <3*' }, "image");
 });
 
 
