@@ -9,7 +9,7 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System, isPrivate, config, toAudio, instaDL, apkDl, pinDl, spotifyMetaData, getPlaylistData } = require("../lib/");
+const { System, isPrivate, config, toAudio, instaDL, apkDl, pinDl, spotifyMetaData, getPlaylistData, tiktokDl } = require("../lib/");
 const { extractUrlsFromText, sleep, getJson, isUrl, IronMan, getBuffer } = require('./client/');
 
 
@@ -239,7 +239,7 @@ System({
   match = (await extractUrlsFromText(match || message.reply_message.text))[0];
   if (!isUrl(match)) return message.reply("*Reply to TikTok URL or provide a TikTok URL*");
   if (!match || !match.includes("tiktok")) return message.reply("*Reply to TikTok URL or provide a TikTok URL*");
-  const { result: data } = await getJson(api + "download/tiktok?url=" + match);
+  const data = await tiktokDl(match);
   var vidd = data.data.find(item => item.type === 'nowatermark_hd');
   var ved = data.data.find(item => item.type === 'nowatermark');
   var pic = data.data.filter(item => item.type === 'photo');

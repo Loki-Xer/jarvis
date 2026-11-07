@@ -1,4 +1,4 @@
-const { System, isPrivate, spotifyMetaData, YtInfo, instaDL, config, pinDl } = require("../lib/");
+const { System, isPrivate, spotifyMetaData, YtInfo, instaDL, config, pinDl, tiktokDl } = require("../lib/");
 const { extractUrlsFromText, getJson, IronMan, platforms } = require("./client/");
 
 System({
@@ -50,7 +50,30 @@ System({
         const result = await pinDl(url);
         return await message.sendFromUrl(result.url, { caption: "_*downloaded 🤍*_" });
       }
-    };
+    } else if (platform.name === "TikTok") {
+      const data = await tiktokDl(url);
+      var vidd = data.data.find(item => item.type === 'nowatermark_hd');
+      var ved = data.data.find(item => item.type === 'nowatermark');
+      var pic = data.data.filter(item => item.type === 'photo');
+      if (vidd || ved) {
+        if (!message.isGroup) {
+          if (vidd) {
+            return await message.reply({ url: vidd.url }, { caption: "*_Downloaded_*", quoted: message.data }, "video");
+          } else {
+            return message.reply("*Video not available*");
+          }
+        } else {
+          return await message.send("Choose quality", { values: [{ displayText: "HD", id: `sendurl ${vidd?.url}` }, { displayText: "SD", id: `sendurl ${ved?.url}` }].filter(Boolean), onlyOnce: 1, withPrefix: true, participates: [message.sender] }, "poll");
+        }
+      } else if (pic.length > 0) {
+        for (var photo of pic) {
+          return await message.reply({ url: photo.url }, { caption: "*_Downloaded!_*", quoted: message.data }, "image");
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      } else {
+        return message;
+      }
+    }
   } catch (error) {
     console.log(error);
   };
