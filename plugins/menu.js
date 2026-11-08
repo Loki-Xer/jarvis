@@ -11,8 +11,7 @@ Jarvis - Loki-Xer
 
 const plugins = require("../lib/system");
 const { System, isPrivate, config } = require("../lib");
-const { BOT_INFO, MEDIA_DATA, MENU_FONT } = require("../config");
-const { uptime } = require("os");
+const { hostname, uptime } = require("os");
 const { version } = require('../package.json');
 const fancy = require('./client/fancy');
 const { isUrl, readMore, clockString } = require('./client/');
@@ -26,57 +25,76 @@ System({
     
     let filterType = match ? match.trim().toUpperCase() : null;
 
-    let menu = `╭━━━〔 ${BOT_INFO.split(';')[0]} ⁩〕━━━···▸\n┃╭──────────────···▸\n✧│ *ᴏᴡɴᴇʀ :*  ${BOT_INFO.split(';')[1]}\n✧│ *ᴜsᴇʀ :* ${message.pushName.replace(/[\r\n]+/gm, "")}\n✧│ *ᴘʟᴜɢɪɴs :* ${plugins.commands.length}\n✧│ *ᴅᴀᴛᴇ :* ${date}\n✧│ *ᴛɪᴍᴇ :* ${time}\n✧│ *ᴜᴘᴛɪᴍᴇ :* ${clockString(uptime())}\n✧│ *ᴠᴇʀsɪᴏɴ :* ᴠ${version}\n┃╰──────────────···▸\n╰━━━━━━━━━━━━━━━···▸\n\n\n${await readMore()}\n╭━━━━━━━━━━━━━━━···▸\n╽`;
+    
+    
+    let menu = `╭━━━〔 ${config.BOT_INFO.split(';')[0]} ⁩〕━━━┈⊷
+┃⛯╭──────────────
+┃⛯│ *owner* :  ${config.BOT_INFO.split(';')[0]}
+┃⛯│ *user* : ${message.pushName.replace(/[\r\n]+/gm, "")}
+┃⛯│ *plugins* : ${plugins.commands.length}
+┃⛯│ *prefix* : ${message.prefix}
+┃⛯│ *date* : ${date}
+┃⛯│ *time* : ${time}
+┃⛯│ *uptime* : ${clockString(uptime())} 
+┃⛯│ *version* : ᴠ${version}
+┃⛯╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+${await readMore()}
+╭━━━━━━━━━━━━━━━┈⊷\n╽`;
+    let cmnd = [];
+    let cmd;
+    let category = [];
+    plugins.commands.map((command, num) => {
+        if (command.pattern) {
+            cmd = command.pattern.toString().match(/(\W*)([A-Za-züşiğ öç1234567890]*)/)[2];
+        }
 
-    let cmnd = [], category = [];
-    for (const command of plugins.commands) {
-        const cmd = command.pattern?.toString().match(/(\W*)([A-Za-züşiğ öç1234567890]*)/)?.[2];
-        if (!command.dontAddCommandList && cmd) {
-            const type = (command.type || "misc").toUpperCase();
+        if (!command.dontAddCommandList && cmd !== undefined) {
+            let type;
+            if (!command.type) {
+                type = "misc";
+            } else {
+                type = command.type.toLowerCase();
+            }
+            
+            if (filterType && type !== filterType) return;
 
-            if (filterType && type !== filterType) continue;
+            cmnd.push({
+                cmd,
+                type: type
+            });
 
-            cmnd.push({ cmd, type });
             if (!category.includes(type)) category.push(type);
         }
-    }
-
-    if (filterType && cmnd.length === 0) {
-        return await message.send(`No commands found for category *${filterType}*.`);
-    }
-
-    const [typFont, ptrnFont] = MENU_FONT.split(';').map(font => isNaN(font) || parseInt(font) > 35 ? null : font);
+    });
     cmnd.sort();
-    for (const cmmd of category.sort()) {
-        let typ;
-        if (typFont && typFont !== '0') {
-            typ = await fancy.apply(fancy[parseInt(typFont)-1], cmmd);
-        } else {
-            typ = cmmd.toUpperCase();
-        }
+    category.sort().forEach((cmmd) => {
+        menu += `
+┃  ╭─────────────┈⊷
+┃  │  *${cmmd} ⏎*
+┃  ╰┬────────────┈⊷
+┃  ┌┤`;
+        let comad = cmnd.filter(({ type }) => type == cmmd);
+        comad.forEach(({ cmd }, num) => {
+            menu += `\n┃  │ ☍  *${cmd.trim()}*`;
+        });
+        menu += `\n┃  ╰─────────────┈⊷`;
+    });
 
-        menu += `\n┃  ╭─────────────┅┄▻\n┃  │  *➻ ${typ}*\n┃  ╰┬────────────┅┄▻\n┃  ┌┤`;
-        for (const { cmd, type } of cmnd.filter(({ type }) => type === cmmd)) {
-            let ptrn;
-            if (ptrnFont && ptrnFont !== '0') {
-                ptrn = await fancy.apply(fancy[parseInt(ptrnFont)-1], cmd.trim().toUpperCase());
-            } else {
-                ptrn = cmd.charAt(0).toUpperCase() + cmd.slice(1).toLowerCase();
-            }
-            menu += `\n┃  │ ‣ ${ptrn}`;
-        }
-        menu += `\n┃  ╰─────────────···▸`;
-    }
-    menu += ` ╰━━━━━━━━━━━┈⊷\nmade with 🤍`;
+    menu += ` ╰━━━━━━━━━━━┈⊷\n`;
+    menu += `\nMade with 🤍`;
 
-    let url = BOT_INFO.split(';')[2];
-    let options = BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
-    url = url.replace(/&gif/g, '');
+    let url = `${config.BOT_INFO.split(';')[2]}`;
+    
+
     if (isUrl(url)) {
-        return await message.sendFromUrl(url, options);
+    let options = config.BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
+    url = url.replace(/&gif/g, '');
+        return await message.sendFromUrl(url,
+          options)
     } else {
         return await message.send(menu);
-    };
+    }
 });
 
 System({
@@ -95,8 +113,8 @@ System({
     cmnd.forEach(({ cmd, desc }, num) => {
         menu += `*${(num + 1)}. ${cmd.trim()}*\n${desc ? `*use: ${desc}*\n\n\n` : '\n\n'}`;
     });
-    if (MEDIA_DATA) {
-        const [title, body, thumbnail] = MEDIA_DATA.split(";");
+    if (config.MEDIA_DATA) {
+        const [title, body, thumbnail] = config.MEDIA_DATA.split(";");
         await message.sendFromUrl(thumbnail, { caption: menu })
     } else {
         await message.send(menu);
