@@ -9,7 +9,7 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System, changeVar, setData, config: Config, platform: { heroku, koyeb, render, railway }, bot, isLid } = require("../lib/");
+const { System, changeVar, setData, config: Config, platform: { heroku, koyeb, render, railway }, bot, isLid, shell } = require("../lib/");
 const REPO_URL = "https://github.com/Loki-Xer/jarvis.git";
 const { version } = require('../package.json');
 const simpleGit = require("simple-git");
@@ -324,7 +324,7 @@ System({
         await git.raw(["checkout", "-f", "-B", branch, `origin/${branch}`]);
         if (envBackup) fs.writeFileSync("./config.env", envBackup);
         await message.reply("*Installing npm packages...*");
-        await execPromise("npm install --legacy-peer-deps");
+        await shell("npm install --legacy-peer-deps");
         if (server === "REPLIT") return await message.reply("_*Bot is updated, restart your application manually*_");
         await message.reply("*Updated the bot. Restarting...*");
         return setTimeout(() => process.exit(0), 1500);
@@ -358,7 +358,7 @@ System({
       if (envBackup) fs.writeFileSync("./config.env", envBackup);
       if (changed.includes("package.json")) {
         await message.reply("*Installing updated npm packages...*");
-        await execPromise("npm install --legacy-peer-deps");
+        await shell("npm install --legacy-peer-deps");
       };
       if (server === "REPLIT") return await message.reply("_*Bot is updated, restart your application manually*_");
       await message.reply("*Updated the bot with latest changes. Restarting...*");
