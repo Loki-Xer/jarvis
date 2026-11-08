@@ -44,21 +44,34 @@ System({
 System({
     pattern: 'join',
     fromMe: true,
-    desc: "to join a group",
+    desc: "to join a group or follow a channel",
     type: 'group'
 }, async (message, match) => {
-    match = (await extractUrlsFromText(match || message.reply_message.text))[0];
-    if (!match) return await message.reply('_Enter a valid group link!_');
-    if (!isUrl(match)) return await message.send('_Enter a valid group link!_');
-    if (!match) return await message.send('_Enter a valid group link!_');
-    if (match && match.includes('chat.whatsapp.com')) {
-        const groupCode = match.split('https://chat.whatsapp.com/')[1];
-        const joinResult = await message.client.groupAcceptInvite(groupCode);
-        if (joinResult) return await message.reply('_Joined!_'); 
-        return await message.reply('_Invalid Group Link!_'); 
-    } else {
-        return await message.reply('_Invalid Group Link!_'); 
-    }
+    match = (await extractUrlsFromText(match || message.reply_message?.text))[0];
+    if (!match || !isUrl(match)) return await message.reply('_Enter a valid group or channel link!_');
+    if (match.includes('whatsapp.com/channel/')) {
+        try {
+            const channelCode = match.split('whatsapp.com/channel/')[1].split(/[?#/]/)[0];
+            const meta = await message.client.newsletterMetadata("invite", channelCode);
+            if (!meta?.id) return await message.reply('_Invalid Channel Link!_');
+
+            await message.client.newsletterFollow(meta.id);
+            return await message.reply(`_Followed channel: ${meta.name || meta.thread_metadata?.name?.text || meta.id}_`);
+        } catch (e) {
+            return await message.reply('_Failed to follow channel: ' + (e.message || e) + '_');
+        }
+    };
+    if (match.includes('chat.whatsapp.com/')) {
+        try {
+            const groupCode = match.split('chat.whatsapp.com/')[1].split(/[?#/]/)[0];
+            const joinResult = await message.client.groupAcceptInvite(groupCode);
+            if (joinResult) return await message.reply('_Joined!_');
+            return await message.reply('_Invalid Group Link!_');
+        } catch (e) {
+            return await message.reply('_Failed to join: ' + (e.message || e) + '_');
+        }
+    };
+    return await message.reply('_Invalid Group or Channel Link!_');
 });
 
 System({
