@@ -122,7 +122,7 @@ System({
         return await message.reply({ url: yt.thumbnail }, { caption: `*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_` }, 'image');
       } else {
         const result = (await yts(match)).slice(0, 12);
-        const options = result.map((u) => ({ displayText: `*${cleanTitle(u.title)}*\n*Author:* ${u.author || "Unknown"}\n*Duration:* ${formatDuration(u.duration)}\n*Views:* ${formatViews(u.views)}\n*Published:* ${u.publishedTime || "Unknown"}`, id: `play ${u.url}`, image: u.image }));
+        const options = result.map((u) => ({ displayText: `${cleanTitle(u.title).trim()}`, id: `play ${u.url}`, image: u.image }));
         return await message.send(`*YouTube Search*\n\n*Query:* ${match}`, { values: options, withPrefix: true, participates: [message.sender] }, "poll");
       }
   });
