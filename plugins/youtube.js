@@ -32,7 +32,7 @@ System({
       match = match || message.reply_message.text;
       if (!match) return await message.reply('_Give a YouTube video *Url* or *Query*_');
      const matchUrl = (await extractUrlsFromText(match))[0];
-     if (isUrl(matchUrl)) {
+     if (isUrl(matachUrl)) {
          const { title, url } = await youtube(matchUrl, "video");
          await message.reply("_*" + "downloading " + title + "*_");
          return await message.send({ url: url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
