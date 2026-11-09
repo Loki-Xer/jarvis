@@ -1,6 +1,6 @@
 {
     "name": "jarvis",
-    "version": "5.0.1",
+    "version": "5.0.2",
     "versionName": "Spearow",
     "description": "A simple WhatsApp Bot Based On WhiskeySockets/Baileys",
     "main": "index.js",

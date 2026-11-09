@@ -109,45 +109,6 @@ function getCurrencyByPhoneNumber(phoneNumber) {
   return 'USD';
 };
 
-const formatViews = (views) => {
-    const count = Number(String(views).replace(/[^0-9.]/g, ""));
-
-    if (!Number.isFinite(count)) return views || "Unknown";
-
-    if (count >= 1e9) return `${(count / 1e9).toFixed(1).replace(/\.0$/, "")}B`;
-    if (count >= 1e6) return `${(count / 1e6).toFixed(1).replace(/\.0$/, "")}M`;
-    if (count >= 1e3) return `${(count / 1e3).toFixed(1).replace(/\.0$/, "")}K`;
-
-    return count.toString();
-};
-
-const formatDuration = (duration) => {
-    if (!duration) return "Unknown";
-
-    const parts = String(duration).split(":").map(Number);
-    if (parts.some(Number.isNaN)) return duration;
-
-    const seconds = parts.reduce((total, part) => total * 60 + part, 0);
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-
-    return [
-        h ? `${h}h` : "",
-        m ? `${m}m` : "",
-        `${s}s`
-    ].filter(Boolean).join(" ");
-};
-
-const cleanTitle = (title) => {
-    return title
-        .replace(/\s*\|+\s*/g, " ")
-        .replace(/\s*[-–—]\s*/g, " - ")
-        .replace(/\s{2,}/g, " ")
-        .trim();
-};
-
-
 async function readMore() {
   const readmore = String.fromCharCode(8206).repeat(4001);
   return readmore;
@@ -167,9 +128,6 @@ const clockString = (duration) => {
 
 module.exports = { 
   getCurrencyByPhoneNumber,
-  formatDuration,
-  formatViews,
-  cleanTitle, 
   readMore,
   clockString
 };

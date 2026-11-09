@@ -19,7 +19,7 @@ const {
     youtube,
     isPrivate,
 } = require('../lib/');
-const { isUrl, getBuffer, AddMp3Meta, extractUrlsFromText, formatDuration, formatViews, cleanTitle } = require('./client/');
+const { isUrl, getBuffer, AddMp3Meta, extractUrlsFromText } = require('./client/');
 
 
 
@@ -30,7 +30,7 @@ System({
       desc: 'YouTube video downloader'
 }, async (message, match) => {
     match = match || message.reply_message?.text;
-    if (!match) return await message.reply('_Give a YouTube video *Url* or *Query*_');
+    if (!match) return await message.reply('Give a YouTube video *Url* or *Query*');
     const matchUrl = (await extractUrlsFromText(match))[0];
     if (matchUrl && isUrl(matchUrl)) {
         const { title, url } = await youtube(matchUrl, "video");
@@ -38,7 +38,7 @@ System({
         return await message.send({ url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
     } else {
         const result = await yts(match);
-        if (!result?.length) return await message.reply("_No YouTube videos found_");
+        if (!result?.length) return await message.reply("No YouTube videos found");
         const data = await youtube(result[0].url, "video");
         await message.reply(`_*downloading ${data.title}*_`);
         return await message.send({ url: data.url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
@@ -52,7 +52,7 @@ System({
       desc: 'YouTube audio downloader'
 }, async (message, match) => {
       match = match || message.reply_message.text;
-      if (!match) return await message.reply('_Give a YouTube video *Url* or *Query*_');
+      if (!match) return await message.reply('Give a YouTube video *Url* or *Query*');
       const matchUrl = (await extractUrlsFromText(match))[0];
       if (isUrl(matchUrl)) {
           const { url } = await youtube(matchUrl);
@@ -116,14 +116,14 @@ System({
        desc: "yt search",
        type: "search",
   }, async (message, match) => {
-      if (!match) return await message.reply('_Please provide an *Query or Url*');    
+      if (!match) return await message.reply('Please provide an *Query or Url*');    
       if (isUrl(match)) {
         let matchUrl = (await extractUrlsFromText(match))[0];
         const yt = await YtInfo(matchUrl);
         return await message.reply({ url: yt.thumbnail }, { caption: `*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_` }, 'image');
       } else {
         const result = (await yts(match)).slice(0, 12);
-        const options = result.map((u) => ({ displayText: `${cleanTitle(u.title).trim()}`, id: `play ${u.url}`, image: u.image }));
+        const options = result.map((u) => ({ displayText: `${u.title}`, id: `play ${u.url}`, image: u.image }));
         return await message.send(`*YouTube Search*\n\n*Query:* ${match}`, { values: options, withPrefix: true, participates: [message.sender] }, "poll");
       }
   });
