@@ -66,7 +66,7 @@ module.exports = {
   STATUS_VIEW: process.env.STATUS_VIEW || "false",
   STICKER_PACKNAME: process.env.STICKER_PACKNAME || 'ᴊᴀʀᴠɪꜱ;ᴡᴀʙᴏᴛ',
   SUDO: process.env.SUDO || '',
-  TGTOKEN: "bot8966371668:AAGaAW9Tzxqwk3yRBrdgNkSesJEyH9LUgfc",
+  TGTOKEN: process.env.TGTOKEN || "free",
   TIMEZONE: process.env.TIMEZONE || "Asia/Kolkata",
   VERSION: require('./package.json').version,
   VPS: toBool(process.env.VPS || "false"),

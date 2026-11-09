@@ -71,22 +71,37 @@ System({
     desc: "Download Sticker From Telegram"
 }, async (message, match, client) => {
     match = match || message.reply_message.text;
-    if (!match) return await message.reply("_Enter a tg sticker url_\nEg: https://t.me/addstickers/Vc_me_dance_pack_by_fStikBot\nKeep in mind that there is a chance of ban if used frequently");
-    let packid = match.split("/addstickers/")[1];
-    let { result } = await getJson(`https://api.telegram.org/${config.TGTOKEN}/getStickerSet?name=${encodeURIComponent(packid)}`);
-    if (result.is_animated) return message.reply("_Animated stickers are not supported_");
-    message.reply(`*Total stickers :* ${result.stickers.length}\n*Estimated complete in:* ${result.stickers.length * 1.5} seconds\nKeep in mind that there is a chance of ban if used frequently`.trim());
-    for (let sticker of result.stickers) {
-        let file_path = await getJson(`https://api.telegram.org/${config.TGTOKEN}/getFile?file_id=${sticker.file_id}`);
-        const buff = `https://api.telegram.org/file/${config.TGTOKEN}/${file_path.result.file_path}`;
-        const stickerPackNameParts = config.STICKER_PACKNAME.split(";");
-        const packname = stickerPackNameParts[0];
-        const author = stickerPackNameParts[1];
-        await message.send(buff, { packname, author, webp: true }, "sticker");
-        await sleep(5500);
+    if (!match) return await message.reply("_Enter a tg sticker url_\nEg: https://t.me/addstickers/Vc_me_dance_pack_by_fStikBot");
+    const packid = match.split("/addstickers/")[1];
+    if (!packid) return await message.reply("_Invalid tg sticker url_");
+    const { result } = await getJson(`https://api.telegram.org/bot${config.TGTOKEN}/getStickerSet?name=${encodeURIComponent(packid)}`);
+    if (!result) return await message.reply("_Sticker set not found_");
+    if (result.stickers.some(s => s.is_animated)) return await message.reply("_Animated (.tgs) stickers are not supported_");
+    const [packname, author] = config.STICKER_PACKNAME.split(";");
+    const total = result.stickers.length;
+    await message.reply(`*Pack :* ${result.title}\n*Total stickers :* ${total}\n_Sending as sticker pack..._`);
+    const items = await Promise.all(result.stickers.map(async (s) => {
+        const f = await getJson(`https://api.telegram.org/bot${config.TGTOKEN}/getFile?file_id=${s.file_id}`);
+        return {
+            data: `https://api.telegram.org/file/bot${config.TGTOKEN}/${f.result.file_path}`,
+            emojis: [s.emoji || "😀"],
+            packname,
+            author
+        };
+    }));
+    const chunks = [];
+    for (let i = 0; i < items.length; i += 30) chunks.push(items.slice(i, i + 30));
+    for (let i = 0; i < chunks.length; i++) {
+        await message.reply({
+                name: chunks.length > 1 ? `${result.title} ${i + 1}` : result.title,
+                publisher: author || "Jarvis",
+                description: packname || result.title,
+                stickers: chunks[i]
+            }, 'stickerPack');
     }
-    return await message.reply('Done');
+    return await message.reply("Done 🤍");
 });
+
 
 System({
   pattern: '(apk|app)',
