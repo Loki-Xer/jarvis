@@ -29,19 +29,20 @@ System({
       type: 'download',
       desc: 'YouTube video downloader'
 }, async (message, match) => {
-      match = match || message.reply_message.text;
-      if (!match) return await message.reply('_Give a YouTube video *Url* or *Query*_');
-     const matchUrl = (await extractUrlsFromText(match))[0];
-     if (isUrl(matachUrl)) {
-         const { title, url } = await youtube(matchUrl, "video");
-         await message.reply("_*" + "downloading " + title + "*_");
-         return await message.send({ url: url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
-      } else {
-        const { url } = (await yts(match))[0];
-        const data = await youtube(url, "video");
-        await message.reply("_*" + "downloading " + data.title + "*_"); 
+    match = match || message.reply_message?.text;
+    if (!match) return await message.reply('_Give a YouTube video *Url* or *Query*_');
+    const matchUrl = (await extractUrlsFromText(match))[0];
+    if (matchUrl && isUrl(matchUrl)) {
+        const { title, url } = await youtube(matchUrl, "video");
+        await message.reply(`_*downloading ${title}*_`);
+        return await message.send({ url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
+    } else {
+        const result = await yts(match);
+        if (!result?.length) return await message.reply("_No YouTube videos found_");
+        const data = await youtube(result[0].url, "video");
+        await message.reply(`_*downloading ${data.title}*_`);
         return await message.send({ url: data.url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
-      }
+    };
 });
 
 System({
