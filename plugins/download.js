@@ -166,12 +166,11 @@ System({
     if (!url) return await message.reply('Please provide an Instagram *url*'); 
     if (!isUrl(url)) return await message.reply("Please provide a valid Instagram *url*");
     if (!url.includes("instagram.com")) return await message.reply("*Please provide a valid Instagram url*");
-    const data = await instaDL(url);
-    if (!data || data.length === 0) return await message.reply("*No content found at the provided URL*");
-    for (const imageUrl of data) {
-        if (imageUrl) return await message.sendFromUrl(imageUrl.url, { quoted: message.data });
-    };
-    return await message.reply("*Done 🤍*");
+    const result = await instaDL(url);
+    if (!result || result.length === 0) return await message.reply("*Exᴀᴍᴘʟᴇ: .story username/link*");
+    if(result.length === 1) return await message.sendFromUrl(result[0].url, { caption: "*done ♥️*", quoted: message });
+    const options = result.map((u, index) => ({ displayText:`${index + 1}/${result.length}`, id: `sendurl ${u.url}` }));
+    return await message.send("\n*Story downloader*\n", { values: options, withPrefix: true, participates: [message.sender] }, "poll");
 });
 
 System({
@@ -198,11 +197,7 @@ System({
   if (!result || result.length === 0) return await message.reply("*Exᴀᴍᴘʟᴇ: .story username/link*");
   if(result.length === 1) return await message.sendFromUrl(result[0].url, { caption: "*done ♥️*", quoted: message });
   const options = result.map((u, index) => ({ displayText:`${index + 1}/${result.length}`, id: `sendurl ${u.url}` }));
-  if(message.isGroup) return await message.send("\n*Story downloader*\n", { values: options, withPrefix: true, participates: [message.sender] }, "poll");
-  for (const media of result) {
-    await message.sendFromUrl(media.url, { quoted: message.data });
-  }
-  return await message.reply("*done ♥️*");
+  return await message.send("\n*Story downloader*\n", { values: options, withPrefix: true, participates: [message.sender] }, "poll");
 });
 
 System ({
