@@ -34,7 +34,7 @@ System({
       if (!result || (!result.hd && !result.sd)) return false;
       return await message.sendFromUrl(result.hd || result.sd, { quoted: message.data });
     } else if (platform.name === "Spotify") {
-      if (url.includes("/playlist/")) return false;
+      if (url.includes("/playlist/") || url.includes('/album/')) return false;
       const meta = await spotifyMetaData(url);
       const txt = `*_${meta.title}_*\n*_${meta.description}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_`;
       return await message.reply({ url: meta.thumbnail }, "image", { caption: txt });
