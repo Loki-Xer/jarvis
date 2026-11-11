@@ -17,7 +17,7 @@ System({
     desc: 'mention',
     type: 'manage'
 }, async (message, match) => {
-   const { mention = { status: "false", message: "" } } = await getData(message.user.id);
+   const { mention = { status: "true", message: "" } } = await getData(message.user.id);
    if (match === "get" && message.isOwner) return await message.send(mention.message || '_*Mention not set yet*_');
    if (match && message.isOwner) {
        const status = match === "on" ? "true" : match === "off" ? "false" : mention.status;
