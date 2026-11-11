@@ -136,7 +136,7 @@ System({
     adminAccess: true,
     desc: "Warn a user",
 }, async (message, match) => {
-    let users = message.mention?.jid?.length ? message.mention : message.reply_message?.sender ? [message.reply_message.sender] : [];
+    let users = message.mention?.jid?.length ? message?.mention?.jid : message.reply_message?.sender ? [message.reply_message.sender] : [];
     if (!users.length) return message.reply("_Reply to someone/mention_\n*Example:* . warn @user\n_To reset warn_\n*Example:* .warn reset");
     const isBotAdmin = await isBotAdmins(message);
     if (!isBotAdmin) return await message.reply("_I'm not admin_");
