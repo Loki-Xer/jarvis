@@ -136,15 +136,19 @@ System({
     adminAccess: true,
     desc: "Warn a user",
 }, async (message, match) => {
-    let user = message.mention.jid?.[0] || message.reply_message.sender;
-    if (!user) return message.reply("_Reply to someone/mention_\n*Example:* . warn @user\n_To reset warn_\n*Example:* .warn reset");
-    const jid = parsedJid(user);
-    let isBotAdmin = await isBotAdmins(message);
+    let users = message.mention?.jid?.length ? [...new Set(message.mention.jid)] : message.reply_message?.sender ? [message.reply_message.sender] : [];
+    if (!users.length) return message.reply("_Reply to someone/mention_\n*Example:* . warn @user\n_To reset warn_\n*Example:* .warn reset");
+    const isBotAdmin = await isBotAdmins(message);
     if (!isBotAdmin) return await message.reply("_I'm not admin_");
-    let userIsAdmin = await isAdmin(message, user);
-    if (userIsAdmin) return await message.send(`_user is admin @${jid[0].split("@")[0]}_`, { mentions: jid });
-    const name = await message.store.getName(user);
-    return await warnMessage(message, match, user, name);
+    for (const user of users) {
+        const userIsAdmin = await isAdmin(message, user);
+        if (userIsAdmin) {
+            await message.send(`_user is admin @${user.split("@")[0]}_`, { mentions: jid });
+            continue;
+        };
+        const name = await message.store.getName(user);
+        await warnMessage(message, match, user, name);
+    };
 });
 
 System({
