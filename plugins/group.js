@@ -136,14 +136,14 @@ System({
     adminAccess: true,
     desc: "Warn a user",
 }, async (message, match) => {
-    let users = message.mention?.jid?.length ? [...new Set(message.mention.jid)] : message.reply_message?.sender ? [message.reply_message.sender] : [];
+    let users = message.mention?.jid?.length ? message.mention : message.reply_message?.sender ? [message.reply_message.sender] : [];
     if (!users.length) return message.reply("_Reply to someone/mention_\n*Example:* . warn @user\n_To reset warn_\n*Example:* .warn reset");
     const isBotAdmin = await isBotAdmins(message);
     if (!isBotAdmin) return await message.reply("_I'm not admin_");
     for (const user of users) {
         const userIsAdmin = await isAdmin(message, user);
         if (userIsAdmin) {
-            await message.send(`_user is admin @${user.split("@")[0]}_`, { mentions: jid });
+            await message.send(`_user is admin @${user.split("@")[0]}_`, { mentions: [user] });
             continue;
         };
         const name = await message.store.getName(user);
