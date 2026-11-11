@@ -333,7 +333,7 @@ System({
       if (commits.total === 0) {
         return await message.reply(`_Jarvis is on the latest version: v${version}_`);
       };
-      if (match !== "now") {
+      if (!["bot", "now", "jarvis"].includes((match || "").toLowerCase().trim())) {
         let list = "*Updates available for Jarvis-md* \n\n";
         commits.all.forEach((c, i) => (list += `${i + 1} ●  ${c.message}\n`));
         const cmd = message.prefix ? `${message.prefix} update now` : "update now";
