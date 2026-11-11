@@ -59,6 +59,10 @@
 * [Whatsapp Group](https://chat.whatsapp.com/HCRUrl9kCvEL6v7OhmG5BR)
 * [Official Website](https://jarvis-md.vercel.app/)
 
+### Updates
+
+* [Channel](https://whatsapp.com/channel/0029Va9dOax4o7qDb6pVvp34)
+* [Telegram](https://t.me/jarvisxupdates)
 ***
 #### THANKS TO
 - [INRL ❤️](https://github.com/inrl-official) <br>
