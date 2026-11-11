@@ -40,15 +40,14 @@ System({
     desc: "get exif data",
     type: "converter",
 }, async (message, match) => {
-   if (!message.reply_message || !message.reply_message.sticker) return await message.reply("_Reply to sticker_");
-   let img = new Image();
-   await img.load(await message.reply_message.download());
-   const exif = JSON.parse(img.exif.slice(22).toString());
-   const stickerPackId = exif['sticker-pack-id'];
-   const stickerPackName = exif['sticker-pack-name'];
-   const stickerPackPublisher = exif['sticker-pack-publisher'];
-   const cap = (`*Sticker Pack ID -->* ${stickerPackId}\n\n*Pack name -->* ${stickerPackName}\n\n*Publisher Name -->* ${stickerPackPublisher}`)
-   return await message.reply(cap);
+    if (!message.reply_message || !message.reply_message.sticker) return await message.reply("_Reply to sticker_");
+    const img = new Image();
+    await img.load(await message.reply_message.download());
+    if (!img.exif) return await message.reply("_No sticker pack info found_");
+    const str = img.exif.toString("utf8");
+    const json = str.slice(str.indexOf("{"), str.lastIndexOf("}") + 1);
+    let exif; try { exif = JSON.parse(json); } catch { return await message.reply("_Can't read this sticker's pack info_"); };
+    return await message.reply(`*Sticker Pack ID -->* ${exif["sticker-pack-id"] || "N/A"}\n\n*Pack name -->* ${exif["sticker-pack-name"] || "N/A"}\n\n*Publisher Name -->* ${exif["sticker-pack-publisher"] || "N/A"}`);
 });
 
 System({
