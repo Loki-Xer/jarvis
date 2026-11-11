@@ -15,6 +15,7 @@ module.exports = {
   ALIVE_DATA : process.env.ALIVE_DATA || "_*Hy &sender i am alive now*_\n\n_PLATFORM: &platform_\n_RUNTIME : &runtime_\n\n_. type alive to update your alive message_",
   ALLWAYS_ONLINE: toBool(process.env.ALLWAYS_ONLINE || "false"),
   ANTIBOT_MSG: process.env.ANTIBOT_MSG || "```Antibot deleted successfully!!```",
+  ANTIGSTATUS_MSG: process.env.ANTIGSTATUS_MSG || "```Group status not allowed!!```",
   ANTILINK_MSG: process.env.ANTILINK_MSG || "```Link Not allowed in this group!!```",
   ANTIWORD_MSG: process.env.ANTIWORD_MSG || "```Antiword deleted successfully!!```",
   AUDIO_DATA: process.env.AUDIO_DATA || 'ʟᴏᴋɪ-xᴇʀ;ᴊᴀʀᴠɪꜱ;https://graph.org/file/58ea74675af7836579a3a.jpg',

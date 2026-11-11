@@ -39,17 +39,6 @@ System({
 });
 
 System({
-    pattern: "dlt",
-    fromMe: true,
-    type: "whatsapp",
-    desc: "Deletes a message",
-}, async (message) => {
-    if (!message.quoted) return await message.reply("_Reply to a message to delete it!_");
-    await message.reply(message.reply_message.data.key, {}, "delete");
-    return message;
-});
-
-System({
 	pattern: 'clear',
 	fromMe: true,
 	desc: 'delete whatsapp chat',
