@@ -26,7 +26,7 @@ System({
 });
 
 System({
-    pattern: 'delcmd',
+    pattern: 'detcmd',
     fromMe: true,
     desc: 'to delete audio/image/video cmd',
     type: 'manage'
