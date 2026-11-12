@@ -29,6 +29,7 @@ System({
 System({
     pattern: "del",
     fromMe: true,
+    onlyGroup: true,
     type: "whatsapp",
     desc: "Deletes a status message",
 }, async (message) => {
