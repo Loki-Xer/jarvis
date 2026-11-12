@@ -28,9 +28,10 @@ System({
     type: "converter",
     desc: "Converts Photo or video to sticker",
 }, async (message, match) => {
-   if (!(message.image || message.video || message.reply_message.video || message.reply_message.image)) return await message.reply("_Reply to photo or video_"); 
-   let media = (message.video || message.image)? message.msg : message.quoted? message.reply_message.msg : null;  
-   let buff = await message.downloadMediaMessage(media);
+   if (!(message.document || message.image || message.video || message.reply_message.video || message.reply_message.image || message.reply_message.document)) return await message.reply("_Reply to document/photo/video_"); 
+   let media = (message.video || message.image || message.document)? message : message.quoted? message.reply_message : null;  
+   let { buff, mime } = await message.client.save(media);
+   if (!mime.startsWith('image/') && !mime.startsWith('video/')) return await message.reply('*Only images and videos are supported !*');  
    return await message.send(buff, { packname: stickerPackNameParts[0], author: stickerPackNameParts[1] }, "sticker");
 });
 
