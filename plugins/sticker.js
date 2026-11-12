@@ -58,6 +58,7 @@ System({
     type: "converter",
 }, async (message, match) => {
    let data;
+   if (message.quoted && message.reply_message.type === 'lottieStickerMessage') return message.reply('*Lottie sticker not support*")
    if (!message.quoted || (!message.reply_message.sticker && !message.reply_message.audio)) return await message.reply("_Reply to a sticker or audio_");
    if (message.reply_message.sticker) {
     const stickerPackName = (match || config.STICKER_PACKNAME).split(";");
@@ -78,6 +79,7 @@ System({
     desc: "Sticker to Image",
     type: "converter",
 }, async (message) => {
+   if (message.quoted && message.reply_message.type === 'lottieStickerMessage') return message.reply('*Lottie sticker not support*")
    if (!message.reply_message?.sticker) return await message.reply("_Reply to a sticker_");
    if (message.reply_message.isAnimatedSticker) return await message.reply("_Reply to a non-animated sticker message_");
    let buffer = await webpToPng(await message.reply_message.downloadAndSave());
@@ -90,6 +92,7 @@ System({
     desc: "Changes sticker to Gif",
     type: "converter",
 }, async (message) => {
+   if (message.quoted && message.reply_message.type === 'lottieStickerMessage') return message.reply('*Lottie sticker not support*")
    if (!message.reply_message?.sticker) return await message.reply("_Reply to a sticker_");
    if (!message.reply_message.isAnimatedSticker) return await message.reply("_Reply to an animated sticker message_");
    const buffer = await webp2mp4(await message.reply_message.download());
@@ -102,9 +105,10 @@ System({
     desc: "Make circle photo or sticker",
     type: "converter",
 }, async (message) => {
+   if (message.quoted && message.reply_message.type === 'lottieStickerMessage') return message.reply('*Lottie sticker not support*")
    if (!(message.image || message.reply_message.sticker || message.reply_message.image)) return await message.reply("_*Reply to photo or sticker*_");
    if (message.reply_message.isAnimatedSticker) return await message.reply("_Reply to a non-animated sticker message_");
-   let media = await message.downloadMediaMessage(message.image ? message : message.quoted ? message.reply_message : null);
+   let media = await message.downloadMediaMessage(message.image ? message : message.quoted? message.reply_message : null);
    if(message.image || message.reply_message.image) {
     return await message.send(await cropToCircle(media), {}, 'image');
    };
@@ -117,6 +121,7 @@ System({
     desc: "crop image or sticker",
     type: "converter",
 }, async (message) => {
+   if (message.quoted && message.reply_message.type === 'lottieStickerMessage') return message.reply('*Lottie sticker not support*")
    if (!(message.image || message.reply_message.sticker || message.reply_message.image)) return await message.reply("_*Reply to photo or sticker*_");
    if (message.reply_message.isAnimatedSticker) return await message.reply("_Reply to a non-animated sticker message_");
    if(message.image || message.reply_message.image) {
