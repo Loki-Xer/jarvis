@@ -17,7 +17,7 @@ const {
     transformData,
     makeInDb
 } = require('../lib');
-const { isBotAdmins } = require("./client/");
+const { isBotAdmins, extractDomains } = require("./client/");
 const actions = ['kick','warn','null'];
 
 
