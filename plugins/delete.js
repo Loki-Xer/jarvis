@@ -37,5 +37,6 @@ System({
     if (!message.quoted || !message.reply_message.groupStatus) return await message.reply("_Reply to a status message to delete it !_");
     await message.reply(message.reply_message.data, { groupStatus: message.reply_message.groupStatus  }, "delete");
     await message.reply('_Status deleted successfully!_');
+    await message.delete();
     return message;
 });
