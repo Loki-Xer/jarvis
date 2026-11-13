@@ -20,7 +20,7 @@ System({
     desc: "Deletes a message",
 }, async (message) => {
     if (!message.quoted) return await message.reply("_Reply to a message to delete it!_");
-    await message.send(message.reply_message.data.key, {}, "delete");
+    await message.send(message.reply_message.data, {}, "delete");
     await message.delete();
     return message;
 });
