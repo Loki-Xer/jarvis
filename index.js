@@ -82,7 +82,7 @@ async function startJarvis() {
 
   await new Promise(r => setTimeout(r, 3000));
   Jarvis({ isStarted: true });
-}
+};
 
 startJarvis().catch((error) => {
   console.error("[Jarvis startup error]", error?.stack || error);
