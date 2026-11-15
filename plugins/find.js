@@ -85,15 +85,7 @@ System({
         const detect = await songIdentify(p);
         if (detect?.track) {
             const track = detect.track;     
-            const cap = `*_${track.title}_*\n\n
-            *Album ID :* ${track.albumadamid || ''}
-            *Artists :* ${track.subtitle || 'Unknown'}
-            *Genre :* ${track.genres?.primary || 'Unknown'}
-            *ISRC :* ${track.isrc || 'Unknown'}
-            *Shazam :* ${track.url || ''}\n\n
-            \`\`\`1.⬢\`\`\` *audio*
-            \`\`\`2.⬢\`\`\` *video*\n\n
-            _*Send a number as a reply to download*_`;
+            const cap = `*_${track.title}_*\n\n*Album ID :* ${track.albumadamid || ''}\n*Artists :* ${track.subtitle || 'Unknown'}\n*Genre :* ${track.genres?.primary || 'Unknown'}\n*ISRC :* ${track.isrc || 'Unknown'}\n*Shazam :* ${track.url || ''}\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_`;
             return await message.send({ url: track.images?.coverart || track.images?.background }, { caption: cap }, "image");
         }
         return await message.send("*Song not found !*\n\nCouldn't identify the song. Try sending a clearer audio clip.");
