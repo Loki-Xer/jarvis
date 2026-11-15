@@ -83,8 +83,8 @@ System({
     const { status, metadata } = res.data;
     if (status.msg !== 'Success') {
         const detect = await songIdentify(p);
-        if (data?.track) {
-            const track = data.track;     
+        if (detect?.track) {
+            const track = detect.track;     
             const cap = `*_${track.title}_*\n\n
             *Album ID :* ${track.albumadamid || ''}
             *Artists :* ${track.subtitle || 'Unknown'}
