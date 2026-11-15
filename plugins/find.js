@@ -10,7 +10,7 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-const { System, isPrivate, yts } = require('../lib');
+const { System, isPrivate, yts, songIdentify } = require('../lib');
 const { audioCut } = require("./client/"); 
 const FormData = require('form-data');
 const axios = require('axios');  
@@ -82,12 +82,25 @@ System({
 
     const { status, metadata } = res.data;
     if (status.msg !== 'Success') {
-        return await message.reply(status.msg);
+        const detect = await songIdentify(p);
+        if (data?.track) {
+            const track = data.track;     
+            const cap = `*_${track.title}_*\n\n
+            *Album ID :* ${track.albumadamid || ''}
+            *Artists :* ${track.subtitle || 'Unknown'}
+            *Genre :* ${track.genres?.primary || 'Unknown'}
+            *ISRC :* ${track.isrc || 'Unknown'}
+            *Shazam :* ${track.url || ''}\n\n
+            \`\`\`1.⬢\`\`\` *audio*
+            \`\`\`2.⬢\`\`\` *video*\n\n
+            _*Send a number as a reply to download*_`;
+            return await message.send({ url: track.images?.coverart || track.images?.background }, { caption: cap }, "image");
+        }
+        return await m.send("*Song not found !*\n\nCouldn't identify the song. Try sending a clearer audio clip.");
     }
     
     const { album, release_date, artists, title } = metadata.music[0];
     const yt = await yts(title);
-
     const cap = `*_${yt[0].title}_*\n\n\n*Album :* ${album.name || ''}\n*Artists :* ${artists !== undefined ? artists.map((v) => v.name).join(', ') : ''}\n*Release Date :* ${release_date}\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_`;
     return await message.send({ url: yt[0].image }, { caption: cap }, "image");
 });
