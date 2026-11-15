@@ -72,26 +72,28 @@ System({
     adminAccess: true,
     desc: "Kicks a person from the group"
 }, async (message, match) => {
-    match = message.mention?.jid?.[0] || message.reply_message?.sender || match;
-    if (!match) return await message.reply("_Reply to someone/mention_\n*Example:* .kick @user or kick all");    
+    let users = message.mention?.jid?.length ? message.mention.jid : message.reply_message?.sender ? [message.reply_message.sender] : [];
+    const kickAll = !users.length && match?.trim() === "all";
+    if (!users.length && !kickAll) return await message.reply("_Reply to someone/mention_\n*Example:* .kick @user or .kick all");
     if (!await isBotAdmins(message)) return await message.send("_I'm not an admin_");
-    if (match === "all") {
-        let { participants } = await message.client.groupMetadata(message.jid);
-        participants = participants.filter(p => p.id !== message.user.jid);       
+    if (kickAll) {
+        const { participants } = await message.client.groupMetadata(message.jid);
+        users = participants.filter(p => p.id !== message.user.jid && !p.admin).map(p => p.id);
+        if (!users.length) return await message.reply("_No members to kick_");
         await message.reply("_To stop this process, use the restart command_");
-        for (let key of participants) {
-            const jid = parsedJid(key.id);
-            await message.client.groupParticipantsUpdate(message.jid, jid, "remove");
-            if (config.KICK_BLOCK) await message.client.updateBlockStatus(jid[0], "block");
-            return await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid });
+    }
+    for (const user of users) {
+        if (await isAdmin(message, user)) {
+            await message.send(`_user is admin @${user.split("@")[0]}_`, { mentions: [user] });
+            continue;
         }
-    } else {
-        const jid = parsedJid(match);
+        const jid = parsedJid(user);
         await message.client.groupParticipantsUpdate(message.jid, jid, "remove");
         if (config.KICK_BLOCK) await message.client.updateBlockStatus(jid[0], "block");
-        return await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid, });
+        await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid });
     }
 });
+
 
 System({
     pattern: "promote",
@@ -100,16 +102,20 @@ System({
     onlyGroup: true,
     adminAccess: true,
     desc: "promote a member",
-}, async (message, match) => {
-    match = message.mention.jid?.[0] || message.reply_message.sender || match
-    if (!match) return await message.reply("_Reply to someone/mention_\n*Example:* . promote @user");
-    let isadmin = await isBotAdmins(message);
-    if (!isadmin) return await message.reply("_I'm not admin_");
-    let jid = parsedJid(match);
-    await message.client.groupParticipantsUpdate(message.jid, jid, "promote");
-    return await message.send(`_@${jid[0].split("@")[0]} promoted as admin successfully_`, { mentions: jid, });
+}, async (message) => {
+    const users = message.mention?.jid?.length ? message.mention.jid : message.reply_message?.sender ? [message.reply_message.sender] : [];
+    if (!users.length) return await message.reply("_Reply to someone/mention_\n*Example:* .promote @user");
+    if (!await isBotAdmins(message)) return await message.reply("_I'm not admin_");
+    for (const user of users) {
+        if (await isAdmin(message, user)) {
+            await message.send(`_@${user.split("@")[0]} is already admin_`, { mentions: [user] });
+            continue;
+        }
+        const jid = parsedJid(user);
+        await message.client.groupParticipantsUpdate(message.jid, jid, "promote");
+        await message.send(`_@${jid[0].split("@")[0]} promoted as admin successfully_`, { mentions: jid });
+    }
 });
-
 
 System({
     pattern: "demote",
@@ -118,15 +124,21 @@ System({
     onlyGroup: true,
     adminAccess: true,
     desc: "demote a member",
-}, async (message, match) => {
-    match = message.mention.jid?.[0] || message.reply_message.sender || match
-    if (!match) return await message.reply("_Reply to someone/mention_\n*Example:* . demote @user");
-    let isadmin = await isBotAdmins(message);
-    if (!isadmin) return await message.reply("_I'm not admin_");
-    let jid = parsedJid(match);
-    await message.client.groupParticipantsUpdate(message.jid, jid, "demote");
-    return await message.send(`_@${jid[0].split("@")[0]} demoted from admin successfully_`, { mentions: jid });
+}, async (message) => {
+    const users = message.mention?.jid?.length ? message.mention.jid : message.reply_message?.sender ? [message.reply_message.sender] : [];
+    if (!users.length) return await message.reply("_Reply to someone/mention_\n*Example:* .demote @user");
+    if (!await isBotAdmins(message)) return await message.reply("_I'm not admin_");
+    for (const user of users) {
+        if (!await isAdmin(message, user)) {
+            await message.send(`_@${user.split("@")[0]} is not an admin_`, { mentions: [user] });
+            continue;
+        }
+        const jid = parsedJid(user);
+        await message.client.groupParticipantsUpdate(message.jid, jid, "demote");
+        await message.send(`_@${jid[0].split("@")[0]} demoted from admin successfully_`, { mentions: jid });
+    }
 });
+
 
 System({
     pattern: "warn",
