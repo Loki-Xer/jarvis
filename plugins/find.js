@@ -96,7 +96,7 @@ System({
             _*Send a number as a reply to download*_`;
             return await message.send({ url: track.images?.coverart || track.images?.background }, { caption: cap }, "image");
         }
-        return await m.send("*Song not found !*\n\nCouldn't identify the song. Try sending a clearer audio clip.");
+        return await message.send("*Song not found !*\n\nCouldn't identify the song. Try sending a clearer audio clip.");
     }
     
     const { album, release_date, artists, title } = metadata.music[0];
