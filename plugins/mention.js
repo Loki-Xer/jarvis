@@ -17,16 +17,21 @@ System({
     desc: 'mention',
     type: 'manage'
 }, async (message, match) => {
-   const { mention = { status: "true", message: "" } } = await getData(message.user.id);
-   if (match === "get" && message.isOwner) return await message.send(mention.message || '_*Mention not set yet*_');
-   if (match && message.isOwner) {
-       const status = match === "on" ? "true" : match === "off" ? "false" : mention.status;
-       const msg = ["on", "off"].includes(match) ? mention.message : match;
-       if (!msg.trim()) return await message.reply('_Invalid mention message! Please provide valid text._');
-       const update = await setData(message.user.id, msg, status, "mention");
-       return await message.reply(update ? '_Mention Updated_' : '_Error in updating_');
-   };
-   return await message.reply("_Check mention format at https://github.com/Loki-Xer/Jarvis-md/wiki_");
+    const { mention = { status: "true", message: "" } } = await getData(message.user.id);
+    if (match === "get" && message.isOwner) return await message.send(mention.message || '_*Mention not set yet*_');    
+	if (match && message.isOwner) {
+        const isToggle = ["on", "off"].includes(match);
+        const status = isToggle ? (match === "on" ? "true" : "false") : mention.status;
+        const msg = isToggle ? mention.message : match;
+        if (!msg.trim() && !isToggle) return await message.reply('_Invalid mention message! Please provide valid text._');        
+        const update = await setData(message.user.id, msg, status, "mention");
+        if (!update) return await message.reply('_Error in updating_');
+        if (match === "on") return await message.reply('_Mention is now *ON* ✅_');
+        if (match === "off") return await message.reply('_Mention is now *OFF* ❌_');
+        return await message.reply('_Mention message updated !_');
+    }
+    const state = mention.status === "true" ? "ON ✅" : "OFF ❌";
+    return await message.reply(`_Mention is currently *${state}*_\n\n_Use:_\n_.mention on_\n_.mention off_\n_.mention get_\n_.mention your text_`);
 });
 
 System({
