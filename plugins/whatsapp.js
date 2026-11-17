@@ -32,9 +32,11 @@ System({
         await message.client.removeProfilePicture(message.user.jid);
         return await message.reply("_Profile Picture Removed_");
     }
-    if (!message.reply_message || !message.reply_message.image) return await message.reply("_Reply to a photo_");
-    let media = await message.reply_message.download();
-    await message.client.updateProfile(media, message.user.jid);
+	if (!(message.document || message.image  || message.reply_message.image || message.reply_message.document)) return await message.reply("_Reply to photo_"); 
+    let media = (message.image || message.document)? message : message.quoted? message.reply_message : null;  
+    let { buff, mime } = await message.client.save(media);
+    if (!mime.startsWith('image/')) return await message.reply('*Only images are supported !*');  
+    await message.client.updateProfile(buff, message.user.jid);
     return await message.reply("_Profile Picture Updated!_");
 });
 
