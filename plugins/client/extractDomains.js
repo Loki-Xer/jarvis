@@ -1,16 +1,16 @@
 function extractDomains(text) {
-    const urls = text.match(/!?https?:\/\/[^\s"'<>]+/gi) || [];
+    const items = text.match(/!?(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}[^\s"'<>,]*/gi) || [];
 
-    return [...new Set(urls.map(url => {
-        const prefix = url.startsWith("!") ? "!" : "";
-        const link = url.replace(/^!/, "");
-
+    return [...new Set(items.map(item => {
+        const prefix = item.startsWith("!") ? "!" : "";
+        let link = item.replace(/^!/, "");
+        if (!/^https?:\/\//i.test(link)) link = "http://" + link;
         try {
-            return prefix + new URL(link).hostname;
+            return prefix + new URL(link).hostname.replace(/^www\./, "");
         } catch {
             return null;
         }
-    }).filter(Boolean))].join(", ");
+    }).filter(Boolean))].join(",");
 }
 
 module.exports = { extractDomains };
