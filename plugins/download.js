@@ -101,7 +101,7 @@ System({
         };
     }));
     const chunks = [];
-    for (let i = 0; i < items.length; i += 30) chunks.push(items.slice(i, i + 30));
+    for (let i = 0; i < items.length; i += 60) chunks.push(items.slice(i, i + 30));
     for (let i = 0; i < chunks.length; i++) {
         await message.reply({
                 name: chunks.length > 1 ? `${result.title} ${i + 1}` : result.title,
