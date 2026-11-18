@@ -1,37 +1,3 @@
-const fs = require("fs");
-const path = require("path");
-const PID_FILE = path.join(__dirname, ".bot.pid");
-
-function killOldInstance() {
-  try {
-    const oldPid = parseInt(fs.readFileSync(PID_FILE, "utf8"), 10);
-    if (oldPid && oldPid !== process.pid) {
-      try {
-        process.kill(oldPid, 0);
-        console.log("Stopping old instance:", oldPid);
-        process.kill(oldPid, "SIGTERM");
-        setTimeout(() => {
-          try { process.kill(oldPid, 0); process.kill(oldPid, "SIGKILL"); } catch {}
-        }, 3000);
-      } catch {} // not running
-    }
-  } catch {} // no pid file yet
-  try { fs.writeFileSync(PID_FILE, String(process.pid)); } catch {}
-}
-
-function cleanupPid() {
-  try {
-    if (parseInt(fs.readFileSync(PID_FILE, "utf8"), 10) === process.pid) {
-      fs.unlinkSync(PID_FILE);
-    }
-  } catch {}
-}
-
-killOldInstance();
-process.on("exit", cleanupPid);
-process.on("SIGINT", () => process.exit(0));
-process.on("SIGTERM", () => process.exit(0));
-
 async function startJarvis() {
   global.Baileys = await import("@whiskeysockets/baileys");
 
@@ -40,13 +6,17 @@ async function startJarvis() {
   process.on('unhandledRejection', (reason) => {
     console.error('[unhandledRejection]', reason?.stack || reason);
   });
+
   process.on('uncaughtException', (err) => {
     console.error('[uncaughtException]', err?.stack || err);
   });
 
   const http = require('http');
   const axios = require('axios');
-  const PORT = typeof process.env.PORT === "string" && !Number.isNaN(Number(process.env.PORT)) ? Number(process.env.PORT) : Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
+  const PORT = typeof process.env.PORT === "string" && !Number.isNaN(Number(process.env.PORT))
+    ? Number(process.env.PORT)
+    : Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
+
   const { Jarvis } = require("./lib/Base/");
   const { removeFiles } = require("./plugins/client/");
   const url = global.server === "BACK4APP" ? process.env.B4A_URL : global.server === "RENDER" ? process.env.RENDER_EXTERNAL_URL : global.server === "KOYEB" ? "https://" + process.env.KOYEB_PUBLIC_DOMAIN : false;
@@ -67,6 +37,7 @@ async function startJarvis() {
   setInterval(() => {
     removeFiles("./");
     removeFiles("./lib/temp");
+
     if (url) {
       axios.get(url, {
         timeout: 5000,
@@ -82,7 +53,7 @@ async function startJarvis() {
 
   await new Promise(r => setTimeout(r, 3000));
   Jarvis({ isStarted: true });
-};
+}
 
 startJarvis().catch((error) => {
   console.error("[Jarvis startup error]", error?.stack || error);
