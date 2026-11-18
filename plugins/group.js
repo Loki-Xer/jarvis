@@ -87,10 +87,9 @@ System({
             await message.send(`_user is admin @${user.split("@")[0]}_`, { mentions: [user] });
             continue;
         }
-        const jid = parsedJid(user);
-        await message.client.groupParticipantsUpdate(message.jid, jid, "remove");
-        if (config.KICK_BLOCK) await message.client.updateBlockStatus(jid[0], "block");
-        await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid });
+        await message.client.groupParticipantsUpdate(message.jid, [user], "remove");
+        if (config.KICK_BLOCK) await message.client.updateBlockStatus(user, "block");
+        await message.send(`_@${user.split("@")[0]} kicked successfully_`, { mentions: [user] });
     }
 });
 
@@ -111,9 +110,8 @@ System({
             await message.send(`_@${user.split("@")[0]} is already admin_`, { mentions: [user] });
             continue;
         }
-        const jid = parsedJid(user);
-        await message.client.groupParticipantsUpdate(message.jid, jid, "promote");
-        await message.send(`_@${jid[0].split("@")[0]} promoted as admin successfully_`, { mentions: jid });
+        await message.client.groupParticipantsUpdate(message.jid, [user], "promote");
+        await message.send(`_@${user.split("@")[0]} promoted as admin successfully_`, { mentions: [user] });
     }
 });
 
@@ -133,9 +131,8 @@ System({
             await message.send(`_@${user.split("@")[0]} is not an admin_`, { mentions: [user] });
             continue;
         }
-        const jid = parsedJid(user);
-        await message.client.groupParticipantsUpdate(message.jid, jid, "demote");
-        await message.send(`_@${jid[0].split("@")[0]} demoted from admin successfully_`, { mentions: jid });
+        await message.client.groupParticipantsUpdate(message.jid, [user], "demote");
+        await message.send(`_@${user.split("@")[0]} demoted from admin successfully_`, { mentions: [user] });
     }
 });
 
@@ -170,7 +167,7 @@ System({
     type: "group",
 }, async (m, match) => {
     let gName = match || m.pushName;
-    if (!m.reply_message.sender) return m.reply("*To create group with someone*\n_Example : . create @user/reply_");
+    if (!m.reply_message?.sender) return m.reply("*To create group with someone*\n_Example : . create @user/reply_");
     const group = await m.client.groupCreate(gName, [m.reply_message.sender, m.sender]);
     return await m.send("_Group successfully created_ ");
 });
@@ -185,7 +182,7 @@ System({
 }, async (message, match) => {
     const data = await message.store.groupStatus(message.chat, "disactive");
     let inactiveUsers = Array.isArray(data) ? `*Total Inactive Users ${data.length}*\n\n` + data.map((item, index) => `*${index + 1}. User: @${item.jid.split("@")[0]}*\n*Role: ${item.role}*\n\n`).join("") : "_*No inactive users found.*_";
-    return await message.send(inactiveUsers.trim(), { mentions: data.map(a => a.jid) || [] });
+    return await message.send(inactiveUsers.trim(), { mentions: Array.isArray(data) ? data.map(a => a.jid) : [] });
 });
 
 
