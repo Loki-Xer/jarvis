@@ -99,12 +99,13 @@ System({
     } else {
         const action = antilink && antilink.action ? antilink.action : 'null';
         const status = antilink && antilink.enabled ? antilink.enabled : 'true';
-        await makeInDb(message.jid, { status, action, value: match }, "antilink");
-        match = await extractDomains(match);
-        const withExclamation = match.split(',').filter(item => item.startsWith('!')).join(',');
-        const withoutExclamation = match.split(',').filter(item => !item.startsWith('!')).join(',');
+        const cleaned = await extractDomains(match);
+        if (!cleaned) return await message.send('_No valid domain found_\n_*Example:* antilink !whatsapp.com, youtube.com_');
+        await makeInDb(message.jid, { status, action, value: cleaned }, "antilink");
+        const withExclamation = cleaned.split(',').filter(i => i.startsWith('!')).join(',');
+        const withoutExclamation = cleaned.split(',').filter(i => !i.startsWith('!')).join(',');
         return await message.send([withExclamation && `_Antilink Not Allowed URL updated: ${withExclamation}_`, withoutExclamation && `_Antilink allowed urls Updated to: ${withoutExclamation}_`].filter(Boolean).join('\n'));
-    };
+    }
 });
 
 System({
