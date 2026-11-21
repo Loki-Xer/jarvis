@@ -31,7 +31,6 @@ module.exports = {
   CALL_BLOCK: toBool(process.env.CALL_BLOCK || "false"),
   CHANNEL_REACTION: toBool(process.env.CHANAL_REACTION || "false"),
   CMD_REACTION: toBool(process.env.CMD_REACTION || 'true'),
-  CONTEXTINFO: process.env.CONTEXTINFO || `{"title": "ᴊᴀʀᴠɪꜱ-ᴍᴅ", "body": "ᴀᴡᴇꜱᴏᴍᴇ 🍉", "thumbnailUrl": "https://i.imgur.com/OWJc4Qx.jpeg", "renderLargerThumbnail": false, "mediaType": 1, "mediaUrl": "", "sourceUrl": "https://github.com/Loki-Xer/Jarvis", "showAdAttribution": true}`,
   DATABASE: DATABASE_URL === "./database.db" ? new Sequelize({ dialect: "sqlite", storage: DATABASE_URL, logging: false }) : new Sequelize(DATABASE_URL, {dialect: "postgres", ssl: true, protocol: "postgres", dialectOptions: { native: true, ssl: { require: true, rejectUnauthorized: false },}, logging: false }),
   DISABLE_GRP: toBool(process.env.DISABLE_GRP || "false"),
   DISABLE_PM: toBool(process.env.DISABLE_PM || "false"),
