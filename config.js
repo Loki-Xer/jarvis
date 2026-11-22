@@ -13,7 +13,7 @@ const DATABASE_URL = process.env.DATABASE_URL === undefined ? "./database.db" : 
 
 module.exports = {
   ALIVE_DATA : process.env.ALIVE_DATA || "_*Hy &sender i am alive now*_\n\n_PLATFORM: &platform_\n_RUNTIME : &runtime_\n\n_. type alive to update your alive message_",
-  ALLWAYS_ONLINE: toBool(process.env.ALLWAYS_ONLINE || "false"),
+  ALLWAYS_ONLINE: toBool(process.env.ALLWAYS_ONLINE || "true"),
   ANTIBOT_MSG: process.env.ANTIBOT_MSG || "```Antibot deleted successfully!!```",
   ANTIGSTATUS_MSG: process.env.ANTIGSTATUS_MSG || "```Group status not allowed!!```",
   ANTILINK_MSG: process.env.ANTILINK_MSG || "```Link Not allowed in this group!!```",
