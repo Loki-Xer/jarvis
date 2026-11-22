@@ -148,7 +148,7 @@ System({
     type: "download",
     desc: "pinterest downloader"
 }, async (message, text, m) => {
-    let match = (await extractUrlsFromText(text || message.reply_message.text))[0];
+    let match = (await extractUrlsFromText(text || message.reply_message?.text))[0];
     if (!match) return await message.reply('_Please provide a pinterest *url*_');
     if (!isUrl(match)) return await message.reply("_Please provide a valid pinterest *url*");
     if (!match.includes("pin.it")) return await message.reply("_Please provide a valid pinterest *url*");
@@ -162,7 +162,7 @@ System({
     type: 'download',
     desc: 'instagram downloader',
 }, async (message, match) => {
-    const url = (await extractUrlsFromText(match || message.reply_message.text))[0];
+    const url = (await extractUrlsFromText(match || message.reply_message?.text))[0];
     if (!url) return await message.reply('Please provide an Instagram *url*'); 
     if (!isUrl(url)) return await message.reply("Please provide a valid Instagram *url*");
     if (!url.includes("instagram.com")) return await message.reply("*Please provide a valid Instagram url*");
