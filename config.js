@@ -23,7 +23,7 @@ module.exports = {
   AUTOUNMUTE_MSG: process.env.AUTOUNMUTE_MSG || '_Group autounmuted!_',
   AUTO_DL: toBool(process.env.AUTO_DL || process.env.AUTO_DOWNLOAD),
   AUTO_REACTION: toBool(process.env.AUTO_REACTION || "false"),
-  AUTO_UPDATE: toBool(process.env.AUTO_UPDATE || "true"),
+  AUTO_UPDATE: toBool(process.env.AUTO_UPDATE || ""),
   BAN_CHATS: process.env.BAN_CHATS || "",
   BOT_INFO: process.env.BOT_INFO || 'ᴊᴀʀᴠɪꜱ;ʟᴏᴋɪ-xᴇʀ;https://lokixer.onrender.com/file/irahhxhmkbdob.mp4&gif',
   BRAINSHOP: process.env.BRAINSHOP || '172372,nbjE0YAlyw3cpoMl',
