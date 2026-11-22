@@ -8,7 +8,7 @@ if (fs.existsSync('config.env')) {
 
 global.api = 'https://lokixer.koyeb.app/';
 
-const toBool = (x) => (x && (x.toLowerCase() === 'true' || x.toLowerCase() === 'on')) || false;
+const toBool = (x) => (x && (x.toLowerCase() === 'true' || x.toLowerCase() === 'on' || x.toLowerCase() === 'yes')) || false;
 const DATABASE_URL = process.env.DATABASE_URL === undefined ? "./database.db" : process.env.DATABASE_URL
 
 module.exports = {
