@@ -14,7 +14,9 @@ const removeBg = async (inputPath, REMOVE_BG) => {
   try {
     const response = await axios({
       method: "post",
-      url: "https://api.remove.bg/v1.0/removebg",
+      // remove.bg ends its self-serve API on 1 December 2026; any API that accepts the same requests
+      // and returns the image works here, with that service's key in `rbg key:`.
+      url: process.env.REMOVE_BG_API_URL || "https://api.remove.bg/v1.0/removebg",
       data: formData,
       responseType: "arraybuffer",
       headers: {
